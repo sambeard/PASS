@@ -4,21 +4,22 @@ sys.path.append('C:\\Program Files\\Anaconda3\\Lib\\site-packages')
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
 import os.path
-from bs4 import BeautifulSoup
 import xlrd
 import re
 import random
 from operator import itemgetter
 
-def winninggoalwithassist(soup, gamecourselist, idx):
+def winninggoalwithassist(jsongamedata, gamecourselist, idx):
     if 'assist' in gamecourselist[idx]:
-        homegoals = soup.find('highlights').find('home').find('goalscorerslist').findChildren()
-        awaygoals = soup.find('highlights').find('away').find('goalscorerslist').findChildren()
+        #homegoals = jsongamedata.find('highlights').find('home').find('goalscorerslist').findChildren()
+        #awaygoals = jsongamedata.find('highlights').find('away').find('goalscorerslist').findChildren()
+        homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+        awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
         # If both teams have scored and the final goal difference was one
-        if (len(homegoals) > 0) and (len(awaygoals) > 0) and (abs(len(homegoals) - len(awaygoals)) == 1):
+        if (homegoals > 0) and (awaygoals > 0) and (abs(homegoals - awaygoals) == 1):
             # If the goal was the last goal by the winning team
             # Check which team has made the most goals
-            if len(homegoals) > len(awaygoals):
+            if homegoals > awaygoals:
                 winningteam = 'home'
                 losingteam = 'away'
             else:
@@ -41,14 +42,14 @@ def winninggoalwithassist(soup, gamecourselist, idx):
     else:
         return False
 
-def winninggoal(soup, gamecourselist, idx):
-    homegoals = soup.find('highlights').find('home').find('goalscorerslist').findChildren()
-    awaygoals = soup.find('highlights').find('away').find('goalscorerslist').findChildren()
+def winninggoal(jsongamedata, gamecourselist, idx):
+    homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+    awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
     # If both teams have scored and the final goal difference was one
-    if (len(homegoals) > 0) and (len(awaygoals) > 0) and (abs(len(homegoals) - len(awaygoals)) == 1):
+    if (homegoals > 0) and (awaygoals > 0) and (abs(homegoals - awaygoals) == 1):
         # If the goal was the last goal by the winning team
         # Check which team has made the most goals
-        if len(homegoals) > len(awaygoals):
+        if homegoals > awaygoals:
             winningteam = 'home'
             losingteam = 'away'
         else:
@@ -70,11 +71,11 @@ def winninggoal(soup, gamecourselist, idx):
             return True
 
 
-def onlygoal(soup, gamecourselist, idx):
-    homegoals = soup.find('highlights').find('home').find('goalscorerslist').findChildren()
-    awaygoals = soup.find('highlights').find('away').find('goalscorerslist').findChildren()
+def onlygoal(jsongamedata, gamecourselist, idx):
+    homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+    awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
     # If the total amount of goals is one, it is the only goal made
-    if len(homegoals) + len(awaygoals) == 1:
+    if homegoals + awaygoals == 1:
         return True
     else:
         return False
@@ -137,12 +138,7 @@ def earlygoal(gamecourselist, idx, homeaway):
             if (event['event'] == 'regular goal') or (event['event'] == 'penalty goal') or (event['event'] == 'own goal'):
                 return False
         # Check the minute the goal is scored
-        try:
-            minute = gamecourselist[idx]['minute']
-        except KeyError:
-            print(gamecourselist[idx])
-            print(homeaway)
-            sys.exit(1)
+        minute = gamecourselist[idx]['minute_asFloat']
         # For now, the goals that are scored in the first 10 minutes of the first or second half are marked as early goals
         if (minute <= 10) or ((minute >= 45) and (minute <= 55)):
             return True
@@ -237,7 +233,7 @@ def lateequalizer(homeaway, gamecourselist, idx):
             othergoals += 1
         if abs(focusgoals - othergoals) == 0:
             #And the minute should be at least the 80th to be a late equalizer
-            if gamecourselist[idx]['minute'] >= 80:
+            if gamecourselist[idx]['minute_asFloat'] >= 80:
                 return True
             else:
                 return False
@@ -290,6 +286,8 @@ def equalizer(homeaway, gamecourselist, idx):
 
 
 def twoplusdifference(homeaway, gamecourselist, idx):
+	# TODO: consider that this template will activate multiple times,
+	# i.e. for a game that has a 6-0. It would be more suited for a final score of 2+?
     # First two goals can never result in a 2+ goal difference
     if idx <= 1:
         return False
@@ -384,7 +382,8 @@ def withassist(gamecourselist, idx):
 def twosuccessive(gamecourselist, idx):
     if idx == len(gamecourselist) - 1:
         return False
-    if ((gamecourselist[idx]['event'] == 'regular goal') and (gamecourselist[idx + 1]['event'] == 'regular goal')) and (gamecourselist[idx]['team'] == gamecourselist[idx + 1]['team']):
+    #do not activate the template if the same player did both goals
+    if ((gamecourselist[idx]['event'] == 'regular goal') and (gamecourselist[idx + 1]['event'] == 'regular goal')) and (gamecourselist[idx]['player'] != gamecourselist[idx + 1]['player']) and (gamecourselist[idx]['team'] == gamecourselist[idx + 1]['team']):
         return True
     else:
         return False
@@ -520,7 +519,7 @@ def earlyredcard(gamestatisticslist, idx):
             if (event['event'] == 'red card'):
                 return False
         # Check the minute the goal is scored
-        minute = gamestatisticslist[idx]['minute']
+        minute = gamestatisticslist[idx]['minute_asFloat']
         # For now, the goals that are scored in the first 10 minutes of the first half are marked as early reds
         if minute <= 10:
             return True
@@ -533,26 +532,26 @@ def redfocus(homeaway, gamestatisticslist, idx):
     else:
         return False
 
-def finaltwoplusdifference(soup):
-    homegoals = int(soup.find('highlights').find('home').find('finalgoals').text)
-    awaygoals = int(soup.find('highlights').find('away').find('finalgoals').text)
+def finaltwoplusdifference(jsongamedata):
+    homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+    awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
     finaldifference = abs(homegoals-awaygoals)
     if finaldifference > 2:
         return True
     else:
         return False
 
-def manygoals(soup):
-    homegoals = int(soup.find('highlights').find('home').find('finalgoals').text)
-    awaygoals = int(soup.find('highlights').find('away').find('finalgoals').text)
+def manygoals(jsongamedata):
+    homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+    awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
     if homegoals + awaygoals > 5:
         return True
     else:
         return False
 
-def nogoals(soup):
-    homegoals = int(soup.find('highlights').find('home').find('finalgoals').text)
-    awaygoals = int(soup.find('highlights').find('away').find('finalgoals').text)
+def nogoals(jsongamedata):
+    homegoals = jsongamedata['MatchInfo'][0]['n_HomeGoals']
+    awaygoals = jsongamedata['MatchInfo'][0]['n_AwayGoals']
     if homegoals + awaygoals == 0:
         return True
     else:
@@ -751,7 +750,7 @@ def lateequalizerfocusteam(homeaway, gamecourselist, idx):
             othergoals += 1
         if abs(focusgoals - othergoals) == 0:
             #And the minute should be at least the 80th to be a late equalizer
-            if gamecourselist[idx]['minute'] >= 80:
+            if gamecourselist[idx]['minute_asFloat'] >= 80:
                 #And the goal should be made by the focus team
                 if gamecourselist[idx]['team'] == homeaway:
                     return True
@@ -806,7 +805,7 @@ def lateequalizerotherteam(homeaway, gamecourselist, idx):
             othergoals += 1
         if abs(focusgoals - othergoals) == 0:
             #And the minute should be at least the 80th to be a late equalizer
-            if gamecourselist[idx]['minute'] >= 80:
+            if gamecourselist[idx]['minute_asFloat'] >= 80:
                 #And the goal should be made by the focus team
                 if gamecourselist[idx]['team'] != homeaway:
                     return True
@@ -858,7 +857,7 @@ def latelossfocusteam(homeaway, gamecourselist, idx):
             othergoals += 1
         if abs(focusgoals - othergoals) == 1:
             #And the minute should be at least the 80th to be a late equalizer
-            if gamecourselist[idx]['minute'] >= 80:
+            if gamecourselist[idx]['minute_asFloat'] >= 80:
                 #And the goal should be made by the other team
                 if gamecourselist[idx]['team'] != homeaway:
                     return True
@@ -910,7 +909,7 @@ def latewinfocusteam(homeaway, gamecourselist, idx):
             othergoals += 1
         if abs(focusgoals - othergoals) == 1:
             #And the minute should be at least the 80th to be a late equalizer
-            if gamecourselist[idx]['minute'] >= 80:
+            if gamecourselist[idx]['minute_asFloat'] >= 80:
                 #And the goal should be made by the other team
                 if gamecourselist[idx]['team'] == homeaway:
                     return True
