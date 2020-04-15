@@ -16,6 +16,32 @@ class ReferenceType(Enum):
 debug = False
 pp = pprint.PrettyPrinter(indent=4)
 
+def PlayerPlaceholder(playerinfo, jsongamedata, homeaway, gap, **kwargs):
+	mentionedentities = kwargs['mentionedentities']
+	currentsentidx = kwargs['idx']
+	currentgapidx = kwargs['gapidx']
+	#First find the player's information by looking up the player
+
+	playerfullname = playerinfo['c_Person']
+
+	namepossibilities = []
+
+	if (playerfullname not in mentionedentities):
+		#If there is no previous mention of the player, use a definite description
+		namepossibilities = PlayerDefiniteDescription(playerinfo)
+		#mentionedentities[playerfullname] is an array of each time the player is mentioned
+		mentionedentities[playerfullname] = {'mentions':[], 'entityinfo':playerinfo}
+		mentiontype = ReferenceType.DEFINITE
+
+	mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,
+									   'gapidx': currentgapidx})
+
+	return  '{'+playerfullname+'}'
+
+def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
+	for sentence in sentences:
+		print(sentence)
+
 def PlayerReferenceModelWithPronouns(playerinfo, jsongamedata, homeaway, gap, **kwargs):
 	# mentionedentities is a dict with all the entities that were already mentioned
 	# Name (TODO: ID) is the key 

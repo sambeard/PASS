@@ -1,7 +1,7 @@
 from Topic_collection_module import TopicCollection
 from Lookup_module import ArrangeDatabase, ReadTemplates, GeneralTemplates, GameCourseTemplates, GameStatisticsTemplates
 from Template_selection_module import GeneralTemplateSelection, GameCourseTemplateSelection, GameStatisticsTemplateSelection
-from Template_filler_module import TemplateReplacement, TemplateReplacementWithPronouns
+from Template_filler_module import TemplateReplacementWithPronouns
 from Text_collection_module import TextCollection
 import pickle
 import json
