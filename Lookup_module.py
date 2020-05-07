@@ -58,8 +58,8 @@ def GeneralTemplates(type, legend, templates):
         return possiblelegend, possibletemplates
 
 def GameCourseTemplates(gamecoursetopic, legend, templates, reporttarget):
-    #Four types of events are reported on: regular goals, missed penalties, own goals, and penalty goals, furthermore all these topics can be
-    # reported on from the perspective in favor of the focus team or against the focus team, so 4x2 variations total
+    #Five types of events are reported on: regular goals, missed penalties, own goals penalty goals and substitutions, furthermore all these topics can be
+    # reported on from the perspective in favor of the focus team or against the focus team, so 5x2 variations total
 
     def TemplateFilter(query1, query2, query3):
         possiblelegend = []
@@ -101,6 +101,12 @@ def GameCourseTemplates(gamecoursetopic, legend, templates, reporttarget):
     # Penalty misses for the away team (penalty miss for the focus team if the focus team is the away team)
     if (gamecoursetopic['event'] == 'missed penalty') and (gamecoursetopic['team'] == 'away'):
         return TemplateFilter(r'^Game\scourse\,\spenalty\smiss\sother\steam', r'^Game\scourse\,\spenalty\smiss\sfocus\steam', r'^Game\scourse\,\spenalty\smiss')
+    # Substitution for the home team (substitution for the focus team if the focus team is the home team)
+    if (gamecoursetopic['event'] == 'substitution') and (gamecoursetopic['team'] == 'home'):
+        return TemplateFilter(r'^Game\scourse\,\ssubstitution\sfocus\steam', r'^Game\scourse\,\ssubstitution\sother\steam', r'^^Game\scourse\,\ssubstitution')
+    # Substitution for the away team (substitution for the focus team if the focus team is the away team)
+    if (gamecoursetopic['event'] == 'substitution') and (gamecoursetopic['team'] == 'away'):
+        return TemplateFilter(r'^Game\scourse\,\ssubstitution\sother\steam', r'^Game\scourse\,\ssubstitution\sfocus\steam', r'^^Game\scourse\,\ssubstitution')
 
 def GameStatisticsTemplates(gamestatisticstopic, legend, templates):
     #Three types of events are reported on: yellow cards, twice yellow, direct red, no query difference between teams

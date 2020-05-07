@@ -1,5 +1,8 @@
+import math
 import sys
 import os.path
+
+import numpy
 import xlrd
 import re
 import random
@@ -165,13 +168,19 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if (isinstance(player, str) and person['c_Person']==player) or (person==player):
 				player = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		if gap == 'substitute in':
+			#playertuple = numpy.random.choice([player['c_Person'], player['c_PersonLastName']], p=[0.5, 0.5])
+			# For substitutes, only use full name
+			playertuple = player['c_Person']
+		else:
+			playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'scoring team':
 		event = kwargs['event']
 		try:
 			team = event['team']
-			clubtuple = ClubReferenceModel(team, jsongamedata, homeaway, gap, **kwargs)
+			club = jsongamedata['MatchInfo'][0]['c_' + team.capitalize() + 'Team']
+			clubtuple = ClubReferenceModel(club, jsongamedata, homeaway, gap, **kwargs)
 			return clubtuple
 		except TypeError:
 			print(event)
@@ -197,11 +206,16 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			sys.exit(1)
 	elif gap == 'minute':
 		event = kwargs['event']
-		try:
-			return str(event['minute'])
-		except (KeyError, TypeError) as e:
-			print(event)
-			sys.exit(1)
+		if 'minute 1' in event:
+			return str(event['minute 1'])
+		else:
+			try:
+				return str(event['minute'])
+			except (KeyError, TypeError) as e:
+				print("Rippp")
+				print(event)
+				sys.exit(1)
+
 	elif gap == 'minus minute':
 		event = kwargs['event']
 		minute = event['minute_asFloat']
@@ -230,6 +244,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 				gk = person
 				break
 		playertuple = PlayerReferenceModelWithPronouns(gk, jsongamedata, homeaway, gap, **kwargs)
+		return playertuple
 	elif gap == 'goalkeeper other team':
 		teamnumber = 1
 		if homeaway == 'home':
@@ -259,6 +274,88 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 				manager = person
 				break			 
 		playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+		return playertuple
+	elif gap == 'winning team manager':
+		eventlist = kwargs['eventlist']
+		idx = kwargs['idx']
+		untilevent = eventlist[:idx + 1]
+		homegoals = 0
+		awaygoals = 0
+		# Count amount of goals so far
+		for event in untilevent:
+			if type(event) == dict:
+				if ((event['event'] == 'regular goal') and (event['team'] == 'home')) or (
+						(event['event'] == 'penalty goal') and (event['team'] == 'home')) or (
+						(event['event'] == 'own goal') and (event['team'] == 'away')):
+					if 'player' in event:
+						homegoals += 1
+					else:
+						homegoals += 2
+				elif ((event['event'] == 'regular goal') and (event['team'] == 'away')) or (
+						(event['event'] == 'penalty goal') and (event['team'] == 'away')) or (
+						(event['event'] == 'own goal') and (event['team'] == 'home')):
+					if 'player' in event:
+						awaygoals += 1
+					else:
+						awaygoals += 2
+		#If homegoals > awaygoals, then home team is winning
+		if homegoals > awaygoals:
+			winningteam = jsongamedata['MatchInfo'][0]['c_HomeTeam']
+			teamnumber = 1
+		elif homegoals < awaygoals:
+			winningteam = jsongamedata['MatchInfo'][0]['c_AwayTeam']
+			teamnumber = -1
+		# TODO: FIND A BETTER FIX FOR THIS
+		else:
+			playertuple = 'De manager'
+			teamnumber = 0
+		if teamnumber != 0:
+			for person in jsongamedata['MatchLineup']:
+				if person['n_FunctionCode']&16 and person['n_HomeOrAway']==teamnumber:
+					manager = person
+					break
+			playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+		return playertuple
+	elif gap == 'losing team manager':
+		eventlist = kwargs['eventlist']
+		idx = kwargs['idx']
+		untilevent = eventlist[:idx + 1]
+		homegoals = 0
+		awaygoals = 0
+		# Count amount of goals so far
+		for event in untilevent:
+			if type(event) == dict:
+				if ((event['event'] == 'regular goal') and (event['team'] == 'home')) or (
+						(event['event'] == 'penalty goal') and (event['team'] == 'home')) or (
+						(event['event'] == 'own goal') and (event['team'] == 'away')):
+					if 'player' in event:
+						homegoals += 1
+					else:
+						homegoals += 2
+				elif ((event['event'] == 'regular goal') and (event['team'] == 'away')) or (
+						(event['event'] == 'penalty goal') and (event['team'] == 'away')) or (
+						(event['event'] == 'own goal') and (event['team'] == 'home')):
+					if 'player' in event:
+						awaygoals += 1
+					else:
+						awaygoals += 2
+		# If homegoals > awaygoals, then home team is winning
+		if homegoals > awaygoals:
+			winningteam = jsongamedata['MatchInfo'][0]['c_HomeTeam']
+			teamnumber = -1
+		elif homegoals < awaygoals:
+			winningteam = jsongamedata['MatchInfo'][0]['c_AwayTeam']
+			teamnumber = 1
+		# TODO: FIND A BETTER FIX FOR THIS
+		else:
+			playertuple = 'De manager'
+			teamnumber = 0
+		if teamnumber != 0:
+			for person in jsongamedata['MatchLineup']:
+				if person['n_FunctionCode'] & 16 and person['n_HomeOrAway'] == teamnumber:
+					manager = person
+					break
+			playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'time between goals':
 		event = kwargs['event']
@@ -418,7 +515,18 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		subs = [event for event in jsongamedata['MatchActions'] if event['n_ActionSet']==5]
 		for sub_event in subs:
 			if sub_event['c_Person'] == player:
-				sub_minute = float(c_ActionMinute['minute'].replace("+",".").strip("'"))
+				sub_minute = float(sub_event['c_ActionMinute'].replace("+",".").strip("'"))
+				minsub = math.ceil(minute - sub_minute)
+				break
+		return minsub
+	elif gap == 'minutes since substitution assist':
+		event = kwargs['event']
+		player = event['assist']
+		minute = float(event['minute'].replace("+","."))
+		subs = [event for event in jsongamedata['MatchActions'] if event['n_ActionSet']==5]
+		for sub_event in subs:
+			if sub_event['c_Person'] == player:
+				sub_minute = float(sub_event['c_ActionMinute'].replace("+",".").strip("'"))
 				minsub = math.ceil(minute - sub_minute)
 				break
 		return minsub
@@ -580,6 +688,113 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 					if t != homeaway:
 						otherteamplayers -= 1
 		return str(otherteamplayers)
+
+	elif gap == 'substitute in':
+		event = kwargs['event']
+		try:
+			player = event['player']
+		except TypeError:
+			print(event)
+			print(gap)
+			print(kwargs['gamestatisticslist'])
+			sys.exit(1)
+		return player
+
+	elif gap == 'substitute out':
+		event = kwargs['event']
+		try:
+			player = event['player']
+		except TypeError:
+			print(event)
+			print(gap)
+			print(kwargs['gamestatisticslist'])
+			sys.exit(1)
+		for person in jsongamedata['MatchLineup']:
+			#ToDo: use person id
+			if (isinstance(player, str) and person['c_Person']==player) or (person==player):
+				player = person
+				break
+		player_subbed_off_full_name = player['c_SubPerson']
+		player_subbed_off_last_name = player['c_SubPersonShort']
+		player_subbed_off_ID = player['n_SubPersonID']
+		# Get the subbed player out of the match players using his ID
+		for person in jsongamedata['MatchLineup']:
+			if person['n_PersonID'] == player_subbed_off_ID:
+				player_subbed_off = person
+				break
+		#playertuple = numpy.random.choice([player_subbed_off_full_name, player_subbed_off_last_name], p=[0.5, 0.5])
+		#playertuple = PlayerReferenceModelWithPronouns(player_subbed_off, jsongamedata, homeaway, gap, **kwargs)
+		return player_subbed_off_full_name
+
+	elif gap == 'substitute in 1':
+		event = kwargs['event']
+		try:
+			player = event['player 1']
+		except TypeError:
+			print("RIP")
+			print(event)
+			print(gap)
+			print(kwargs['gamestatisticslist'])
+			sys.exit(1)
+		return player
+
+	elif gap == 'substitute in 2':
+		event = kwargs['event']
+		try:
+			player = event['player 2']
+		except TypeError:
+			print("RIP")
+			print(event)
+			print(gap)
+			print(kwargs['gamestatisticslist'])
+			sys.exit(1)
+		return player
+
+	elif gap == 'substitute in 3':
+		event = kwargs['event']
+		try:
+			player = event['player 3']
+		except TypeError:
+			print("RIP")
+			print(event)
+			print(gap)
+			print(kwargs['gamestatisticslist'])
+			sys.exit(1)
+		return player
+
+	elif gap == 'number of substitutions focus team':
+		# Retrieve the focus team
+		team = jsongamedata['MatchInfo'][0]['c_'+homeaway.capitalize()+'Team']
+		eventlist = kwargs['eventlist']
+		idx = kwargs['idx']
+		numbersubs = 1
+		untilevent = eventlist[:idx]
+		for event in untilevent:
+			# Check for all past events if they are substitutions
+			if (type(event) == dict) and (event['event'] == 'substitution'):
+				# Count the amount of times a substitution had been made before this one for the focus team'
+				if event['team'] == team:
+					numbersubs += 1
+		return 'substitute ' + str(numbersubs)
+
+	elif gap == 'number of substitutions other team':
+		if homeaway == 'home':
+			team = jsongamedata['MatchInfo'][0]['c_AwayTeam']
+		elif homeaway == 'away':
+			team = jsongamedata['MatchInfo'][0]['c_HomeTeam']
+		eventlist = kwargs['eventlist']
+		idx = kwargs['idx']
+		numbersubs = 1
+		untilevent = eventlist[:idx]
+		for event in untilevent:
+			# Check for all past events if they are substitutions
+			if (type(event) == dict) and (event['event'] == 'substitution'):
+				# Count the amount of times a substitution had been made before this one for the other team'
+				if event['team'] == team:
+					numbersubs += 1
+		return 'substitute ' + str(numbersubs)
+
+
 	else:
 		print(gap)
 

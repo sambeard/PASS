@@ -31,7 +31,9 @@ def TopicWalk(file):
 	# Get all the templates and categories
 	# legends and templates are now dictionaries, and the keys are 'home', 'away' and 'neutral'
 	# (or whatever is contained in reporttargets)
+	print("dbtuples:", dbtuples)
 	for tuple in dbtuples:
+		print("tuple: ", tuple)
 		reporttarget = tuple[1]
 		legends[reporttarget], templates[reporttarget] = ReadTemplates(tuple[0])
 	

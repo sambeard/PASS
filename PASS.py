@@ -37,14 +37,32 @@ def main(file, savestate='n'):
             print(newfile + 'infodict.p saved')
             pickle.dump(infodict, f)
 
+def selectreport1819(filename, savestate = 'n'):
+    currentpath = os.getcwd()
+    if filename.endswith('.json'):
+        main(currentpath + '/JSONGameData/Eredivisie/2018-2019/' + filename, savestate)
+    else:
+        print("file doesn't exist, did you add .json to the end?")
+
+def selectreport1516(filename, savestate = 'n'):
+    currentpath = os.getcwd()
+    if filename.endswith('.json'):
+        main(currentpath + '/JSONGameData/Eredivisie/2015-2016/' + filename, savestate)
+    else:
+        print("file doesn't exist, did you add .json to the end?")
+
+
 currentpath = os.getcwd()
+print("Current path = ", currentpath)
 #textpath = os.path.dirname(currentpath) + '/Europa_League/TestInfoXMLs'
 #onlyfiles = [textpath + '/' + f for f in os.listdir(textpath) if os.path.isfile(os.path.join(textpath, f))]
 #for file in onlyfiles:
     #main(file, 'y')
 
+###selectreport1819('ado_aja_20190224.json','y')
+#selectreport1819('az_emm_20190202.json','y')
+selectreport1516('gra_psv_20151031.json','y')
 #main(os.path.dirname(currentpath) + '/Europa_League/NewInfoXMLs/rea_aja_5032019.xml', 'y')
-main(currentpath + '/JSONGameData/2goals_1scorer_succession.json', 'y')
-
+###main(currentpath + '/JSONGameData/2goals_1scorer_succession.json', 'y')
 #if __name__ == '__main__':
     #main(sys.argv[1:])
