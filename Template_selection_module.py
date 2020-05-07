@@ -504,6 +504,7 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
     templates = InfoVariety(homeaway, templates, previoustemplates)
     temptemplatelist = []
 
+    # Check if the current team is the focus team or not
     if event['team'] == homeaway:
         if event['event'] == 'regular goal':
             if Ruleset.winninggoalwithassist(soup, gamecourselist, idx) == True:
@@ -586,6 +587,29 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.5])
                 except IndexError:
                     ''
+
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal focus team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
+            if Ruleset.fastassistaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal focus team (fast assist after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (fast assist after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
             if Ruleset.withassist(gamecourselist, idx) == True:
                 try:
                     categorytemplates = templates[legend.index("Game course, regular goal focus team (with assist)")]
@@ -606,6 +630,29 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.1])
                 except IndexError:
                     ''
+
+            if Ruleset.freekickgoal(soup, gamecourselist, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal focus team (free kick)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (free kick)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.5])
+                except IndexError:
+                    ''
+
+            if Ruleset.header(soup, gamecourselist, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal focus team (header)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (header)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.5])
+                except IndexError:
+                    ''
+
             try:
                 categorytemplates = templates[legend.index("Game course, regular goal focus team (all purpose)")]
             except ValueError:
@@ -686,13 +733,24 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.5])
                 except IndexError:
                     ''
+
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, own goal focus team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, own goal (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
             try:
                 categorytemplates = templates[legend.index("Game course, own goal focus team (all purpose)")]
             except ValueError:
                 categorytemplates = templates[legend.index("Game course, own goal (all purpose)")]
             template = random.choice(categorytemplates)
             temptemplatelist.append([template, 0.1])
-
         if event['event'] == 'penalty goal':
             if Ruleset.ergebniskosmetik(homeaway, gamecourselist, idx) == True:
                 try:
@@ -724,6 +782,20 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.5])
                 except IndexError:
                     ''
+
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[
+                        legend.index("Game course, goal from penalty focus team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[
+                        legend.index("Game course, goal from penalty (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
             try:
                 categorytemplates = templates[legend.index("Game course, goal from penalty focus team (all purpose)")]
             except ValueError:
@@ -746,6 +818,258 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                 temptemplatelist.append([template, 0.1])
             except IndexError:
                 ''
+        if event['event'] == 'substitution':
+
+            # if Ruleset.tripleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+            #     try:
+            #         categorytemplates = templates[legend.index("Game course, substitution focus team (triple)")]
+            #     except ValueError:
+            #         categorytemplates = templates[legend.index("Game course, substitution (triple)")]
+            #     try:
+            #         template = random.choice(categorytemplates)
+            #         temptemplatelist.append([template, 1])
+            #     except IndexError:
+            #         ''
+            #
+            # elif Ruleset.doubleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+            #     try:
+            #         categorytemplates = templates[legend.index("Game course, substitution focus team (double)")]
+            #     except ValueError:
+            #         categorytemplates = templates[legend.index("Game course, substitution (double)")]
+            #     try:
+            #         template = random.choice(categorytemplates)
+            #         temptemplatelist.append([template, 0.5])
+            #     except IndexError:
+            #         ''
+            #
+            # if Ruleset.threeconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+            #     try:
+            #         categorytemplates = templates[legend.index("Game course, substitution focus team (three consecutive)")]
+            #     except ValueError:
+            #         categorytemplates = templates[legend.index("Game course, substitution (three consecutive)")]
+            #     try:
+            #         template = random.choice(categorytemplates)
+            #         temptemplatelist.append([template, 1])
+            #     except IndexError:
+            #         ''
+            #
+            # elif Ruleset.twoconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+            #     try:
+            #         categorytemplates = templates[legend.index("Game course, substitution focus team (two consecutive)")]
+            #     except ValueError:
+            #         categorytemplates = templates[legend.index("Game course, substitution (two consecutive)")]
+            #     try:
+            #         template = random.choice(categorytemplates)
+            #         temptemplatelist.append([template, 0.5])
+            #     except IndexError:
+            #         ''
+            ## First check if team is winning, then check wat kind of subsitution (double or consecutive etc.)
+            if Ruleset.focusteamwinning(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (triple and winning)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (triple and winning)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (double and winning)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (double and winning)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (three consecutive and winning)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (three consecutive and winning)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (two consecutive and winning)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (two consecutive and winning)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (winning)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (winning)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            ## First check if team is losing, then check wat kind of subsitution (double or consecutive etc.)
+            elif Ruleset.focusteamlosing(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (triple and losing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (triple and losing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (double and losing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (double and losing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (three consecutive and losing)")]
+                    except ValueError:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (three consecutive and losing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (two consecutive and losing)")]
+                    except ValueError:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (two consecutive and losing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (losing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (losing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            elif Ruleset.tieing(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (triple and tieing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (triple and tieing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (double and tieing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (double and tieing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (three consecutive and tieing)")]
+                    except ValueError:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (three consecutive and tieing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution focus team (two consecutive and tieing)")]
+                    except ValueError:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (two consecutive and tieing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution focus team (tieing)")]
+                    except ValueError:
+                        categorytemplates = templates[legend.index("Game course, substitution (tieing)")]
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            else:
+                try:
+                    categorytemplates = templates[legend.index("Game course, substitution focus team (all purpose)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, substitution (all purpose)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.001])
+                except IndexError:
+                    ''
     else:
         #Get the regular goal rules
         if event['event'] == 'regular goal':
@@ -856,6 +1180,50 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                 except IndexError:
                     ''
 
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal other team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
+            if Ruleset.fastassistaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal other team (fast assist after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (fast assist after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
+            if Ruleset.freekickgoal(soup, gamecourselist, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal other team (free kick)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (free kick)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.5])
+                except IndexError:
+                    ''
+
+            if Ruleset.header(soup, gamecourselist, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, regular goal other team (header)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, regular goal (header)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.5])
+                except IndexError:
+                    ''
+
             #If there were no special conditions, we use the regular all-purpose conditions
             if Ruleset.withassist(gamecourselist, idx) == True:
                 try:
@@ -917,6 +1285,18 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.5])
                 except IndexError:
                     ''
+
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, own goal other team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, own goal (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
             try:
                 categorytemplates = templates[legend.index("Game course, own goal other team (all purpose)")]
             except ValueError:
@@ -997,13 +1377,25 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     temptemplatelist.append([template, 0.5])
                 except IndexError:
                     ''
+
+            if Ruleset.fastgoalaftersubstitution(gamecourselist, homeaway, idx):
+                try:
+                    categorytemplates = templates[legend.index("Game course, goal from penalty other team (fast goal after substitution)")]
+                except ValueError:
+                    categorytemplates = templates[legend.index("Game course, goal from penalty (fast goal after substitution)")]
+                try:
+                    template = random.choice(categorytemplates)
+                    temptemplatelist.append([template, 0.75])
+                except IndexError:
+                    ''
+
             try:
                 categorytemplates = templates[legend.index("Game course, goal from penalty other team (all purpose)")]
             except ValueError:
                 categorytemplates = templates[legend.index("Game course, goal from penalty (all purpose)")]
             try:
                 template = random.choice(categorytemplates)
-                temptemplatelist.append([template, 0.5])
+                temptemplatelist.append([template, 0.1])
             except IndexError:
                 ''
         if event['event'] == 'missed penalty':
@@ -1013,6 +1405,206 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                 categorytemplates = templates[legend.index("Game course, penalty miss (all purpose)")]
             template = random.choice(categorytemplates)
             temptemplatelist.append([template, 0.1])
+        if event['event'] == 'substitution':
+
+            ## First check if team is winning, then check wat kind of subsitution (double or consecutive etc.)
+            if Ruleset.otherteamwinning(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution (triple and winning)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (double and winning)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (three consecutive and winning)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (two consecutive and winning)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution (winning)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            ## First check if team is losing, then check wat kind of subsitution (double or consecutive etc.)
+            elif Ruleset.otherteamlosing(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (triple and losing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (double and losing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (three consecutive and losing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (two consecutive and losing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution (losing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            elif Ruleset.tieing(gamecourselist, homeaway, idx):
+
+                # If triple substitution (very rare)
+                if Ruleset.tripleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (triple and tieing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If double substitution
+                elif Ruleset.doubleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (double and tieing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If three consecutive substitutions (without goals inbetween)
+                elif Ruleset.threeconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (three consecutive and tieing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+                # If two consecutive substitutions
+                elif Ruleset.twoconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
+                    try:
+                        categorytemplates = templates[
+                            legend.index("Game course, substitution (two consecutive and tieing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+                # Regular substitution
+                else:
+                    try:
+                        categorytemplates = templates[legend.index("Game course, substitution (tieing)")]
+                    except ValueError:
+                        categorytemplates = []
+                    try:
+                        template = random.choice(categorytemplates)
+                        temptemplatelist.append([template, 0.5])
+                    except IndexError:
+                        ''
+
+            if not temptemplatelist:
+                temptemplatelist.append(["".strip(), 1])
 
     elems = [i[0] for i in temptemplatelist]
     probs = [i[1] for i in temptemplatelist]
@@ -1046,7 +1638,227 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
         gamecourselist[idx] = newdict
         del gamecourselist[idx + 1]
         #And modify the template and legend
+
+    # Modify the gamecourselist if the template for a triple substitution is chosen
+    try:
+        tstemplate = templates[legend.index("Game course, substitution focus team (triple)")]
+    except ValueError:
+        tstemplate = []
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (triple and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (triple and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (triple and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution other team (triple)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (triple)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (triple and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (triple and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (triple and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    if template in tstemplate:
+        newdict = {}
+        for key in gamecourselist[idx]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 1': gamecourselist[idx][key]})
+            else:
+                newdict.update({key: gamecourselist[idx][key]})
+        for key in gamecourselist[idx + 1]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 2': gamecourselist[idx + 1][key]})
+        for key in gamecourselist[idx + 2]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 3': gamecourselist[idx + 2][key]})
+        gamecourselist[idx] = newdict
+        del gamecourselist[idx + 1]
+        del gamecourselist[idx + 1]
+        # And modify the template and legend
+
+    # Modify the gamecourselist if the template for a three consecutive substitution is chosen
+    try:
+        tstemplate = templates[legend.index("Game course, substitution focus team (three consecutive)")]
+    except ValueError:
+        tstemplate = []
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (three consecutive and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (three consecutive and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (three consecutive and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (three consecutive)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (three consecutive and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (three consecutive and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (three consecutive and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    if template in tstemplate:
+        newdict = {}
+        for key in gamecourselist[idx]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 1': gamecourselist[idx][key]})
+            else:
+                newdict.update({key: gamecourselist[idx][key]})
+        for key in gamecourselist[idx + 1]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 2': gamecourselist[idx + 1][key]})
+        for key in gamecourselist[idx + 2]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 3': gamecourselist[idx + 2][key]})
+        gamecourselist[idx] = newdict
+        del gamecourselist[idx + 1]
+        del gamecourselist[idx + 1]
+        # And modify the template and legend
+
+    #Modify the gamecourselist if the template for a double substitution is chosen
+    try:
+        tstemplate = templates[legend.index("Game course, substitution focus team (double)")]
+    except ValueError:
+        tstemplate = []
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (double and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (double and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution focus team (double and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution other team (double)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (double)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (double and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (double and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (double and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    if template in tstemplate:
+        newdict = {}
+        for key in gamecourselist[idx]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 1': gamecourselist[idx][key]})
+            else:
+                newdict.update({key: gamecourselist[idx][key]})
+        for key in gamecourselist[idx + 1]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 2': gamecourselist[idx + 1][key]})
+        gamecourselist[idx] = newdict
+        del gamecourselist[idx + 1]
+        #And modify the template and legend
+
+    #Modify the gamecourselist if the template for a two consecutive substitution is chosen
+    try:
+        tstemplate = templates[legend.index("Game course, substitution focus team (two consecutive)")]
+    except ValueError:
+        tstemplate = []
+    try:
+        tstemplate.extend(
+            templates[legend.index("Game course, substitution focus team (two consecutive and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(
+            templates[legend.index("Game course, substitution focus team (two consecutive and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(
+            templates[legend.index("Game course, substitution focus team (two consecutive and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (two consecutive)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (two consecutive and winning)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (two consecutive and losing)")])
+    except ValueError:
+        tstemplate.extend([])
+    try:
+        tstemplate.extend(templates[legend.index("Game course, substitution (two consecutive and tieing)")])
+    except ValueError:
+        tstemplate.extend([])
+
+    if template in tstemplate:
+        newdict = {}
+        for key in gamecourselist[idx]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 1': gamecourselist[idx][key]})
+            else:
+                newdict.update({key: gamecourselist[idx][key]})
+        for key in gamecourselist[idx + 1]:
+            if (key != 'event') and (key != 'team'):
+                newdict.update({key + ' 2': gamecourselist[idx + 1][key]})
+        gamecourselist[idx] = newdict
+        del gamecourselist[idx + 1]
+        #And modify the template and legend
+
+
     return gamecourselist, template
+
 
 def GameStatisticsTemplateSelection(event, legend, templates, gamestatisticslist, soup, homeaway, idx, previoustemplates):
     templates = InfoVariety(homeaway, templates, previoustemplates)

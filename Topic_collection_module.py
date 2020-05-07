@@ -2,7 +2,7 @@ import sys
 import re
 from operator import itemgetter
 
-def EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals):
+def EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals, substitutions):
     def CreateSmallEventSummary(event):
         minute = 0
         if 'c_ActionMinute' in event:
@@ -40,8 +40,8 @@ def EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards,
         assistdict['event'] = 'regular goal'
         eventlist.append(assistdict.copy())
         
-    otherevents = [missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals]
-    eventdictlist = ['missed penalty', 'penalty goal', 'red card', 'yellow card', 'twice yellow', 'own goal']
+    otherevents = [missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals, substitutions]
+    eventdictlist = ['missed penalty', 'penalty goal', 'red card', 'yellow card', 'twice yellow', 'own goal', 'substitution']
     for idx, category in enumerate(otherevents):
         for event in category:
             eventdict = CreateSmallEventSummary(event)
@@ -60,6 +60,7 @@ def GameCourseEvents(jsondata):
     yellowreds = []
     yellowcards = []
     owngoals = []
+    substitutions = []
     for event in jsondata['MatchActions']:
         actionset = event['n_ActionSet']
         actioncode1 = event['n_ActionCode']
@@ -82,14 +83,19 @@ def GameCourseEvents(jsondata):
             if actioncode1 & 128 or (event['n_ActionReasonID'] == 37) or (event['c_ActionReason'].casefold() == "assist"):
                 assists.append(event)
                 continue
-            if actioncode1 == 4: #the most boring goals are just "goals"
-                regulargoals.append(event)
+
+        # TODO: FREEKICK TO IMPLEMENT
+        #   if actioncode1 & 1024:
+
+        #  if actioncode1 == 4 or actioncode1 == 1028: #the most boring goals are just "goals"
+            regulargoals.append(event)
+
 
         
         if actionset==10: # Missed penalties. Same as before, could use ActionCodes to get more info
             missedpenalties.append(event)
         
-        if actionset==3:
+        if actionset==3: # yellow/red cards
             if actioncode1 & 2048:
                 yellowcards.append(event)
                 
@@ -98,7 +104,12 @@ def GameCourseEvents(jsondata):
                 
             if actioncode1 & 8192:
                 redcards.append(event)
-    eventdict = EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals)
+
+        if actionset==5: # Substitution
+            substitutions.append(event)
+
+
+    eventdict = EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards, yellowcards, yellowreds, owngoals, substitutions)
     return eventdict
 
 def TopicCollection(jsongamedata):
@@ -107,7 +118,8 @@ def TopicCollection(jsongamedata):
     gamestatisticslist = []
     twiceyellowlist = []
     for eventdict in eventlist:
-        if (eventdict['event'] == 'regular goal') or (eventdict['event'] == 'missed penalty') or (eventdict['event'] == 'penalty goal') or (eventdict['event'] == 'own goal'):
+        if (eventdict['event'] == 'regular goal') or (eventdict['event'] == 'missed penalty') or \
+                (eventdict['event'] == 'penalty goal') or (eventdict['event'] == 'own goal') or (eventdict['event'] == 'substitution') :
             gamecourselist.append(eventdict)
         elif (eventdict['event'] == 'red card') or (eventdict['event'] == 'yellow card') or (eventdict['event'] == 'twice yellow'):
             gamestatisticslist.append(eventdict)
