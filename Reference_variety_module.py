@@ -301,11 +301,12 @@ def ClubReferenceModel(club, jsongamedata, homeaway, gap, **kwargs):
 			club_city = kwargs['clubinfo'][club]['City']
 			if ('de club uit ' + club_city) not in previousreference:
 				namepossibilities.append(['de club uit ' + club_city, 10])
-			#TODO: nicknames are not consistently written in the json file, and must be checked!
-			if homeOrAway==1: #only use nicknames for the focus team
-				for nickname in kwargs['clubinfo'][club]['Nicknames']:
-					if (nickname) not in previousreference:
-						namepossibilities.append([nickname, 5])
+			#TODO: nicknames are not consistently written in the json file, and must be checked
+			#plus they are PLURALS!
+# 			if homeOrAway==1: #only use nicknames for the focus team
+# 				for nickname in kwargs['clubinfo'][club]['Nicknames']:
+# 					if (nickname) not in previousreference:
+# 						namepossibilities.append([nickname, 5])
 
 					
 
