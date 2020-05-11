@@ -15,6 +15,131 @@ class ReferenceType(Enum):
 debug = False
 pp = pprint.PrettyPrinter(indent=4)
 
+def PlayerPlaceholder(playerinfo, jsongamedata, homeaway, gap, **kwargs):
+	mentionedentities = kwargs['mentionedentities']
+	currentsentidx = kwargs['idx']
+	currentgapidx = kwargs['gapidx']
+	#First find the player's information by looking up the player
+
+	playerfullname = playerinfo['c_Person']
+
+	namepossibilities = []
+
+	if (playerfullname not in mentionedentities):
+		#If there is no previous mention of the player, use a definite description
+		namepossibilities = PlayerDefiniteDescription(playerinfo)
+		#mentionedentities[playerfullname] is an array of each time the player is mentioned
+		mentionedentities[playerfullname] = {'mentions':[], 'entityinfo':playerinfo}
+		mentiontype = ReferenceType.DEFINITE
+
+	mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,
+									   'gapidx': currentgapidx})
+
+	return	'{'+playerfullname+'}'
+
+def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
+	mentionedentities = kwargs['mentionedentities']
+
+	#sort players in order of mentions
+	important_players = sorted(mentionedentities.keys(), key=lambda player: len(mentionedentities[player]['mentions']), reverse=True)
+	players_mention_num = [len(mentionedentities[player]['mentions']) for player in important_players if len(mentionedentities[player]['mentions'])>1]
+	#players mentioned 1 time only are moved to another list
+	single_mention_players = important_players[len(players_mention_num):]
+	del(important_players[len(players_mention_num):])
+	
+	#find which players will need disambiguation
+	for player in important_players:
+		mentions_without_pronoun = 0
+		ambiguousreferents = []
+		for mentionidx,mention in reversed(list(enumerate(mentionedentities[player]['mentions']))):
+			can_use_pronoun,ambiguousreferentsthissent = AmbiguousReferents(player,mentionidx,sentences,mentionedentities)
+			if can_use_pronoun:
+				print("can use pronoun")
+			else:
+				mentions_without_pronoun += 1
+				ambiguousreferents.extend(ambiguousreferentsthissent)
+		if mentions_without_pronoun>1:
+			pprint.pprint(ambiguousreferents)
+	print('-------\n')
+	
+	
+def AmbiguousReferents(currentplayer,mentionidx,sentences,mentionedentities):
+	mentions = mentionedentities[currentplayer]['mentions']
+	currentmention = mentions[mentionidx]
+	sentence = sentences[currentmention['sentidx']]
+	idxlastmention = mentions[mentionidx-1]['sentidx']
+	currentsentidx = currentmention['sentidx']
+	currentgapidx = currentmention['gapidx']
+	playerinfo = mentionedentities[currentplayer]['entityinfo']
+	ambiguousplayers = []
+	#Adapted from McCoy and Strube 2002, page 68
+	#Figure 3, 1. :
+	if abs(idxlastmention-currentsentidx)>2:
+		#maybe here is good to re-use the name?
+		return False,[]
+	#Figure 3, 2. never happens in PASS so not implemented			
+	#Figure 3, 3. thread change = different "topic" (title/stuff) - not implemented
+	#Figure 3, 4:
+	#find if there is a competing antecedent
+	competing_antecedent_same_sent = False
+	competing_antecedent_prev_sent = False
+	first_occur_this_player_this_sent = True
+	if currentgapidx>0:
+		#this is not the first gap in this sentence. Is the previous gap also a person?
+		previousgapsthissent = [mentionedentities[entity] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']==currentsentidx and mention['gapidx']<currentgapidx and 'c_Person' in mentionedentities[entity]['entityinfo']]
+		prev_mentions_this_player_this_sent = [entity for entity in previousgapsthissent if entity['entityinfo']==playerinfo]
+		first_occur_this_player_this_sent = len(prev_mentions_this_player_this_sent)==0
+
+		#if previous gaps are not mentions of this player, it is a competing antecedent in same sentence
+		if len(previousgapsthissent)!=len(prev_mentions_this_player_this_sent):
+			competing_antecedent_same_sent = True
+			other_players_this_sent = [mentionedentities[entity] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']==currentsentidx and mention['gapidx']<currentgapidx and 'c_Person' in mentionedentities[entity]['entityinfo'] and mentionedentities[entity]['entityinfo']!=playerinfo]
+			ambiguousplayers = other_players_this_sent
+	#is there maybe an entity mentioned in a previous sentence?
+	previousgaps = [mention for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']<currentsentidx and mention['sentidx']>(currentsentidx-2) and mentionedentities[entity]['entityinfo'] != playerinfo]
+	if len(previousgaps)>0:
+		competing_antecedent_prev_sent = True
+		ambiguousplayers = ambiguousplayers + previousgaps
+	#else:
+	#	pdb.set_trace()
+	
+	if debug:
+		if currentgapidx>0:
+			print('prev_mentions_this_player_this_sent: '+str(prev_mentions_this_player_this_sent))
+		print('Index of this gap:'+str(currentgapidx))
+		if 'previousgaps' in locals():
+			print('Previous gaps this sent'+str(previousgaps))
+		print('Previous mentions in general: '+str(mentionedentities))
+		print("Is player's first mention in this sent? "+str(first_occur_this_player_this_sent))
+		print("Is there a competing antecedent in this sent? "+str(competing_antecedent_same_sent))
+		print("Is there a competing antecedent in previous sent? "+str(competing_antecedent_prev_sent))
+	
+	#Figure 2, 1. 
+	if first_occur_this_player_this_sent:
+		if competing_antecedent_prev_sent:
+			#2.1 (a)
+			#TODO: try to use referring expression generation here
+			return False, ambiguousplayers
+			#namepossibilities = PlayerDefiniteDescription(playerinfo)	
+			#mentiontype = ReferenceType.DEFINITE
+		if competing_antecedent_same_sent and currentgapidx>0:
+			#2.1 (b)
+			#TODO: look at the content of previousgapsthissent
+			#is it reasonable to resolve to the same pronoun?
+			return False, ambiguousplayers
+	#Figure 2, 2. 
+	else:
+		if competing_antecedent_same_sent:
+			#2.2(a):
+			mentiontype = ReferenceType.DEFINITE
+			return False, ambiguousplayers
+		else:					
+			#2.2(b):
+			return True, []
+	#this should be Figure 3.5
+	return True, []
+	
+
 def PlayerReferenceModelWithPronouns(playerinfo, jsongamedata, homeaway, gap, **kwargs):
 	# mentionedentities is a dict with all the entities that were already mentioned
 	# Name (TODO: ID) is the key 

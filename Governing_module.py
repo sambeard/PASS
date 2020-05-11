@@ -1,7 +1,8 @@
 from Topic_collection_module import TopicCollection
 from Lookup_module import ArrangeDatabase, ReadTemplates, GeneralTemplates, GameCourseTemplates, GameStatisticsTemplates
 from Template_selection_module import GeneralTemplateSelection, GameCourseTemplateSelection, GameStatisticsTemplateSelection
-from Template_filler_module import TemplateReplacement, TemplateReplacementWithPronouns
+from Template_filler_module import TemplateReplacementWithPronouns
+from Reference_variety_module import ReviewReferences
 from Text_collection_module import TextCollection
 import pickle
 import json
@@ -89,6 +90,7 @@ def TopicWalk(file):
 			else:
 				lastgap = previousgaplist[idx - 1]
 			templatelist[idx], previousgaplist[idx] = TemplateReplacementWithPronouns(jsongamedata, homeaway, templatelist[idx], event=allevents[idx], gamecourselist=individualgamecourse, previousgaplist=lastgap, gamestatisticslist=gamestatistics, eventlist=allevents, idx=idx, previous_gaps=previousgaplist, mentionedentities=mentionedentities)
+		ReviewReferences(templatelist,jsongamedata,reporttarget,mentionedentities=mentionedentities)
 		templatetext, templatedict = TextCollection(templatelist, jsongamedata, reporttarget, len(general), len(individualgamecourse), len(gamestatistics))
 
 		templatedicts[reporttarget] = templatedict.copy()
