@@ -1,5 +1,4 @@
 from Topic_collection_module import TopicCollection
-import xlrd
 import re
 import json
 import sys

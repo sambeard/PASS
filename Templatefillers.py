@@ -1,6 +1,5 @@
 import sys
 import os.path
-import xlrd
 import re
 import random
 from math import ceil

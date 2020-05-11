@@ -1,10 +1,5 @@
 import sys
-sys.path.append(r'C:\\Users\\u1269857\\AppData\\Local\\Continuum\\Anaconda3\\Lib\\site-packages')
-sys.path.append('C:\\Program Files\\Anaconda3\\Lib\\site-packages')
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
 import os.path
-import xlrd
 import re
 import random
 from operator import itemgetter

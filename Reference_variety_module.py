@@ -1,5 +1,4 @@
 import sys
-import xlrd
 import re
 import numpy
 from enum import Enum, auto
@@ -289,19 +288,26 @@ def ClubReferenceModel(club, jsongamedata, homeaway, gap, **kwargs):
 				break
 		if ('de ploeg van manager ' + manager) not in previousreference:
 			namepossibilities.append(['de ploeg van manager ' + manager, 10])
-		citydict = {}
-		workbook = xlrd.open_workbook(r'Clubs and Nicknames.xlsx')
-		worksheets = workbook.sheet_names()[0]
-		worksheet = workbook.sheet_by_name(worksheets)
-		for curr_row in range(worksheet.nrows):
-			curr_cell = 1
-			excelclub = worksheet.cell_value(curr_row, curr_cell)
-			curr_cell = 3
-			excelcity = worksheet.cell_value(curr_row, curr_cell)
-			citydict.update({excelclub: excelcity})
-		if club in citydict:
-			if ('de club uit ' + citydict[club]) not in previousreference:
-				namepossibilities.append(['de club uit ' + citydict[club], 10])
+		
+		if 'clubinfo' not in kwargs:
+			clubinfofile = "Clubs and Nicknames.json"
+			try:
+				with open(clubinfofile, 'rb') as f:
+					clubinfo = json.load(f)
+					kwargs['clubinfo'] = clubinfo
+			except:
+				print ("Error while opening "+clubinfofile+" ", sys.exc_info()[0])
+		if club in kwargs['clubinfo']:
+			club_city = kwargs['clubinfo'][club]['City']
+			if ('de club uit ' + club_city) not in previousreference:
+				namepossibilities.append(['de club uit ' + club_city, 10])
+			#TODO: nicknames are not consistently written in the json file, and must be checked!
+			if homeOrAway==1: #only use nicknames for the focus team
+				for nickname in kwargs['clubinfo'][club]['Nicknames']:
+					if (nickname) not in previousreference:
+						namepossibilities.append([nickname, 5])
+
+					
 
 	elems = [i[0] for i in namepossibilities]
 	probs = [i[1] for i in namepossibilities]
