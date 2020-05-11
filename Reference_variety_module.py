@@ -290,7 +290,7 @@ def ClubReferenceModel(club, jsongamedata, homeaway, gap, **kwargs):
 			namepossibilities.append(['de ploeg van manager ' + manager, 10])
 		
 		if 'clubinfo' not in kwargs:
-			clubinfofile = "Clubs and Nicknames.json"
+			clubinfofile = "Databases/ClubsAndNicknames.json"
 			try:
 				with open(clubinfofile, 'rb') as f:
 					clubinfo = json.load(f)
