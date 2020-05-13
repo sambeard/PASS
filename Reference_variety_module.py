@@ -20,8 +20,10 @@ def PlayerPlaceholder(playerinfo, jsongamedata, homeaway, gap, **kwargs):
 	mentionedentities = kwargs['mentionedentities']
 	currentsentidx = kwargs['idx']
 	currentgapidx = kwargs['gapidx']
-	#First find the player's information by looking up the player
+	nominal = (kwargs['case'] == 'nominal')
+	print("Playerinfo:\n", playerinfo)
 
+	#First find the player's information by looking up the player
 	playerfullname = playerinfo['c_Person']
 
 	namepossibilities = []
@@ -33,8 +35,9 @@ def PlayerPlaceholder(playerinfo, jsongamedata, homeaway, gap, **kwargs):
 		mentionedentities[playerfullname] = {'mentions':[], 'entityinfo':playerinfo}
 		mentiontype = ReferenceType.DEFINITE
 
+	# Also attach whether a nominative pronoun should be used if applicable
 	mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,
-									   'gapidx': currentgapidx})
+									   'gapidx': currentgapidx, 'nominal': nominal})
 
 	return	'{'+playerfullname+'}'
 
@@ -47,18 +50,153 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 	#players mentioned 1 time only are moved to another list
 	single_mention_players = important_players[len(players_mention_num):]
 	del(important_players[len(players_mention_num):])
-	
-	#find which players will need disambiguation
+
+	# The players that get mentioned only once always get their full name mentioned.
+	for player in single_mention_players:
+
+		# Find the sentence and gaps for these players
+		placeholder_string_to_change = '{' + player + '}'
+		sentence_number = mentionedentities[player]['mentions'][0]['sentidx']
+		sentence_to_change = sentences[sentence_number]
+		placeholder_name_index = sentence_to_change.find(placeholder_string_to_change)
+
+		# Check if placeholder has been found
+		if (placeholder_name_index != -1):
+			letterlist = list(sentence_to_change)
+			# Delete the opening curly bracket
+			del letterlist[placeholder_name_index]
+
+			# Delete the closing curly bracket
+			del letterlist[placeholder_name_index + len(player)]
+
+			new_sentence = "".join(letterlist)
+			sentence_to_change = new_sentence
+			sentences[sentence_number] = sentence_to_change
+		else:
+			print("Player is not in the sentence! \n")
+
+	# Find which players will need disambiguation
 	for player in important_players:
 		mentions_without_pronoun = 0
 		ambiguousreferents = []
-		for mentionidx,mention in reversed(list(enumerate(mentionedentities[player]['mentions']))):
-			can_use_pronoun,ambiguousreferentsthissent = AmbiguousReferents(player,mentionidx,sentences,mentionedentities)
+		for mentionidx, mention in reversed(list(enumerate(mentionedentities[player]['mentions']))):
+			can_use_pronoun, ambiguousreferentsthissent = AmbiguousReferents(player,mentionidx,sentences,mentionedentities)
+
+			# Find the placeholder name in the sentence
+			placeholder_string_to_change = '{' + player + '}'
+			sentence_number = mention['sentidx']
+			sentence_to_change = sentences[sentence_number]
+			placeholder_name_index = sentence_to_change.find(placeholder_string_to_change)
+			playerinfo = mentionedentities[player]['entityinfo']
+
+			if 'nominal' in mention:
+				nominal = mention['nominal']
+			else:
+				nominal = False
+
+			# If it is the player's first entry of the report, always use full name
+			if mentionidx == 0:
+				# Check if placeholder is found
+				if (placeholder_name_index != -1):
+					letterlist = list(sentence_to_change)
+					# Delete the opening curly bracket
+					del letterlist[placeholder_name_index]
+
+					# Delete the closing curly bracket
+					del letterlist[placeholder_name_index + len(player)]
+
+					new_sentence = "".join(letterlist)
+					sentence_to_change = new_sentence
+					sentences[sentence_number] = sentence_to_change
+				else:
+					print("Player is not in the sentence! \n")
+				continue
+
+
+			# If you can use a pronoun, replace placeholder with 'hij' or 'hem'
 			if can_use_pronoun:
 				print("can use pronoun")
+
+			# If a nominative pronoun should be used
+				if nominal:
+
+					# If it is the first entry in a sentence, it should be with a capital
+					if placeholder_name_index == 0:
+						HijHem_string = "Hij"
+					else:
+						HijHem_string = "hij"
+
+				# If an objective pronoun should be used
+				else:
+
+					# If it is the first entry in a sentence, it should be with a capital
+					if placeholder_name_index == 0:
+						HijHem_string = "Hem"
+					else:
+						HijHem_string = "hem"
+
+				if (placeholder_name_index != -1):
+					letterlist = list(sentence_to_change)
+					# Delete the placeholder playername
+					del letterlist[placeholder_name_index:(placeholder_name_index + len(placeholder_string_to_change))]
+
+					# Add 'hij' where the placeholder name was before
+					for letter in reversed(HijHem_string):
+						letterlist.insert(placeholder_name_index, letter)
+
+					new_sentence = "".join(letterlist)
+					sentence_to_change = new_sentence
+					sentences[mention['sentidx']] = sentence_to_change
+				else:
+					print("Player is not in the sentence! \n")
+				continue
+
+			# If this all doesn't hold, then it means that it is not the first mention, and no pronoun can be used,
+			# thus a disambiguating reference should be used.
 			else:
 				mentions_without_pronoun += 1
 				ambiguousreferents.extend(ambiguousreferentsthissent)
+
+				# Find the ambiguous players if applicable
+				otherplayers = []
+				if not ambiguousreferentsthissent:
+					for other_player in ambiguousreferentsthissent:
+						sentidx = other_player['sentidx']
+						gapidx = other_player['gapidx']
+						for player in mentionedentities:
+							for playermention in player['mentions']:
+								if (playermention['sentidx'] == sentidx) and (playermention['gapidx'] == gapidx):
+									otherplayers.append(player['entityinfo'])
+									break
+							break
+
+				potential_disambiguating_references, probabilities = disambiguatingReferringExpression(playerinfo, otherplayers)
+				norm = [float(i) / sum(probabilities) for i in probabilities]
+				disambiguating_reference = numpy.random.choice(potential_disambiguating_references, p=norm)
+
+				# If it is the first entry of the sentence, it should be capitalized
+				if placeholder_name_index == 0:
+					disambiguating_reference = disambiguating_reference.capitalize()
+
+
+				# Replace the placeholder with the new reference
+				# Check if placeholder is found
+				if (placeholder_name_index != -1):
+					letterlist = list(sentence_to_change)
+					# Delete the placeholder playername
+					del letterlist[placeholder_name_index:(placeholder_name_index + len(placeholder_string_to_change))]
+
+					# Add the disambiguating_reference where the placeholder name was before
+					for letter in reversed(disambiguating_reference):
+						letterlist.insert(placeholder_name_index, letter)
+
+					new_sentence = "".join(letterlist)
+					sentence_to_change = new_sentence
+					sentences[mention['sentidx']] = sentence_to_change
+				else:
+					print("Player is not in the sentence! \n")
+				continue
+
 		if mentions_without_pronoun>1:
 			pprint.pprint(ambiguousreferents)
 	print('-------\n')
@@ -313,7 +451,7 @@ def RefereeReferenceModel(refereeinfo, jsongamedata, homeaway, gap, **kwargs):
 		namepossibilities = [['arbiter '+refereefullname, 'scheidsrechter '+refereefullname], [0.5, 0.5]]
 		mentionedentities[refereefullname] = {'mentions':[], 'entityinfo':refereeinfo}
 	else:
-		lastname = refereeinfo['PersonLastName']
+		lastname = refereeinfo['c_PersonLastName']
 		namepossibilities = [['arbiter '+lastname, 'scheidsrechter '+lastname, lastname, 'de arbiter', 'de scheidsrechter'], [0.2, 0.2, 0.2, 0.2, 0.2]]
 	mentiontype = ReferenceType.DEFINITE
 	namechoice = numpy.random.choice(namepossibilities[0], p=namepossibilities[1])

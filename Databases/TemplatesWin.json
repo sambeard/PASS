@@ -92,7 +92,6 @@
         "De <final home goals>-<final away goals> overwinning tegen <other team> zorgde voor veel blije gezichten.",
         "<#focus team> was maandagavond te sterk voor <other team> (<final home goals>-<final away goals>).",
         "<#other team> werd uiteindelijk met <final home goals>-<final away goals> verslagen.",
-        "<#focus team> won dankzij <deciding goal scorer> met <final home goals>-<final away goals>.",
         "<In eigen huis tegen; home|Op bezoek bij; away;; homeaway> <#other team clubname> (<final home goals>-<final away goals>) boekte <focus team clubname> de overwinning.",
         "<In eigen huis tegen; home|Op bezoek bij; away;; homeaway> <other team clubname> (<final home goals>-<final away goals>) werd de overwinning geboekt.",
         "In <city> werd <#other team> door doelpunten van <goal scorers list focus team> met <final home goals>-<final away goals> verslagen.",
@@ -133,7 +132,7 @@
         "<#goal scorer> ontvangt de bal van <assist giver> en jaagt het leer de winkelhaak in: <home goals>-<away goals>.",
         "Uit een steekpass van <assist giver> schiet <#goal scorer> op vakkundige wijze de <home goals> -<away goals> binnen.",
         "<#assist giver> bracht <goal scorer> na <minute> minuten in stelling, die de trekker overhaalde: <home goals>-<away goals>.",
-        "<#goal scorer> werd na tien minuten diep gestuurd door <assist giver>, en schoot de <home goals>-<away goals> binnen.",
+        "<#goal scorer> werd na <minute> minuten diep gestuurd door <assist giver>, en schoot de <home goals>-<away goals> binnen.",
         "In de <minute> minuut maakte <#goal scorer> op aangeven van <assist giver> ook de <home goals>-<away goals>.",
         "In de <minute>e minuut was het raak: <#assist giver> legde af op <goal scorer> die verwoestend doeltrof: <home goals>-<away goals>.",
         "De goal voor <focus team> viel nadat <#assist giver> uitstekend voor gaf, waarna <#goal scorer> prachtig raak knalde: <home goals>-<away goals> (<minute>.).",
@@ -141,7 +140,7 @@
         "<#assist giver> vond <goal scorer> die doeltreffend uithaalde: <home goals>-<away goals>.",
         "<#assist giver> bood in de <minute>e minuut <goal scorer> een niet te missen kans: <home goals>-<away goals>.",
         "Na <minute> minuten legde <#assist giver> op het juiste moment af op de afrondende <goal scorer>: <home goals>-<away goals>.",
-        "<#assist giver> lanceerde <#goal scorer>, die vervolgens raak schoot: <home goals>-<away goals> (<minute>.).",
+        "<#assist giver> lanceerde <goal scorer>, die vervolgens raak schoot: <home goals>-<away goals> (<minute>.).",
         "In de <minute>e minuut vond <#assist giver> <goal scorer> die scoorde: <home goals>-<away goals> (<minute>.)."
     ],
     "Game course, regular goal focus team (two successive goals one team)": [

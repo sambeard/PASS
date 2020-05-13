@@ -171,6 +171,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		event = kwargs['event']
 		try:
 			team = event['team']
+			club = jsongamedata['MatchInfo'][0]['c_' + team.capitalize() + 'Team']
 			clubtuple = ClubReferenceModel(team, jsongamedata, homeaway, gap, **kwargs)
 			return clubtuple
 		except TypeError:
