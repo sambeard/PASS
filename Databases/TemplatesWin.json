@@ -130,10 +130,10 @@
     ],
     "Game course, regular goal focus team (with assist)": [
         "<#goal scorer> ontvangt de bal van <assist giver> en jaagt het leer de winkelhaak in: <home goals>-<away goals>.",
-        "Uit een steekpass van <assist giver> schiet <#goal scorer> op vakkundige wijze de <home goals> -<away goals> binnen.",
+        "Uit een steekpass van <assist giver> schiet <#goal scorer> op vakkundige wijze de <home goals>-<away goals> binnen.",
         "<#assist giver> bracht <goal scorer> na <minute> minuten in stelling, die de trekker overhaalde: <home goals>-<away goals>.",
         "<#goal scorer> werd na <minute> minuten diep gestuurd door <assist giver>, en schoot de <home goals>-<away goals> binnen.",
-        "In de <minute> minuut maakte <#goal scorer> op aangeven van <assist giver> ook de <home goals>-<away goals>.",
+        "In de <minute>e minuut maakte <#goal scorer> op aangeven van <assist giver> ook de <home goals>-<away goals>.",
         "In de <minute>e minuut was het raak: <#assist giver> legde af op <goal scorer> die verwoestend doeltrof: <home goals>-<away goals>.",
         "De goal voor <focus team> viel nadat <#assist giver> uitstekend voor gaf, waarna <#goal scorer> prachtig raak knalde: <home goals>-<away goals> (<minute>.).",
         "<#assist giver> vond <goal scorer>, die vervolgens verwoestend uithaalde: <home goals>-<away goals>.",

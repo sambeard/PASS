@@ -79,12 +79,14 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 	for player in important_players:
 		mentions_without_pronoun = 0
 		ambiguousreferents = []
+		references_already_used = []
 		for mentionidx, mention in reversed(list(enumerate(mentionedentities[player]['mentions']))):
 			can_use_pronoun, ambiguousreferentsthissent = AmbiguousReferents(player,mentionidx,sentences,mentionedentities)
 
 			# Find the placeholder name in the sentence
 			placeholder_string_to_change = '{' + player + '}'
 			sentence_number = mention['sentidx']
+			gap_number = mention['gapidx']
 			sentence_to_change = sentences[sentence_number]
 			placeholder_name_index = sentence_to_change.find(placeholder_string_to_change)
 			playerinfo = mentionedentities[player]['entityinfo']
@@ -117,7 +119,7 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 			if can_use_pronoun:
 				print("can use pronoun")
 
-			# If a nominative pronoun should be used
+				# If a nominative pronoun should be used
 				if nominal:
 
 					# If it is the first entry in a sentence, it should be with a capital
@@ -151,32 +153,69 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 					print("Player is not in the sentence! \n")
 				continue
 
-			# If this all doesn't hold, then it means that it is not the first mention, and no pronoun can be used,
-			# thus a disambiguating reference should be used.
+
+			# Check if this player has been mentioned in this sentence already
+			if gap_number > 0:
+				# this is not the first gap in this sentence. Is the previous gap also a person (and not this player)?
+				previousgapsthissent = [mentionedentities[entity] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx'] == sentence_number and mention['gapidx'] < gap_number and 'c_Person' in mentionedentities[entity]['entityinfo'] and mentionedentities[entity]['entityinfo'] != playerinfo]
+				prev_mentions_this_player_this_sent = [entity for entity in previousgapsthissent if entity['entityinfo'] == playerinfo]
 			else:
+				previousgapsthissent = []
+				prev_mentions_this_player_this_sent = []
+
+			# Check if this player has been mentioned in the previous sentence
+			prev_mentions_this_player_prev_sent = [mentionedentities[entity] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx'] < sentence_number and mention['sentidx'] > (sentence_number - 2) and mentionedentities[entity]['entityinfo'] == playerinfo]
+
+			# Check if player has been mentioned in one of the 2 sentences
+			player_mentioned_this_or_prev_sentence = ((len(prev_mentions_this_player_this_sent) + len(prev_mentions_this_player_prev_sent)) > 0)
+
+			# If player has been mentioned in one of the 2 sentences
+			if player_mentioned_this_or_prev_sentence:
+
 				mentions_without_pronoun += 1
 				ambiguousreferents.extend(ambiguousreferentsthissent)
 
 				# Find the ambiguous players if applicable
 				otherplayers = []
-				if not ambiguousreferentsthissent:
+				if ambiguousreferentsthissent:
 					for other_player in ambiguousreferentsthissent:
 						sentidx = other_player['sentidx']
 						gapidx = other_player['gapidx']
-						for player in mentionedentities:
-							for playermention in player['mentions']:
+						for other_other_player in mentionedentities:
+							for playermention in mentionedentities[other_other_player]['mentions']:
 								if (playermention['sentidx'] == sentidx) and (playermention['gapidx'] == gapidx):
-									otherplayers.append(player['entityinfo'])
+									otherplayers.append(mentionedentities[other_other_player]['entityinfo'])
 									break
 							break
 
-				potential_disambiguating_references, probabilities = disambiguatingReferringExpression(playerinfo, otherplayers)
+				potential_disambiguating_references, probabilities = PlayerReferringExpression(playerinfo, jsongamedata, homeaway, 0, **kwargs, idx=sentence_number, gapidx=gap_number)
 				norm = [float(i) / sum(probabilities) for i in probabilities]
-				disambiguating_reference = numpy.random.choice(potential_disambiguating_references, p=norm)
+				disambiguating_reference_raw = numpy.random.choice(potential_disambiguating_references, p=norm)
+
+				# If all possible references have already been picked, one has to be reused, so the already used list
+				# should be wiped
+				reference_counter = 0
+				for reference in potential_disambiguating_references:
+					if reference in references_already_used:
+						reference_counter += 1
+				if (reference_counter == len(potential_disambiguating_references)):
+					print("All references have been used!\n")
+					references_already_used.clear()
+
+
+				# If a reference is picked which has already been used, pick another one
+				while disambiguating_reference_raw in references_already_used:
+					disambiguating_reference_raw = numpy.random.choice(potential_disambiguating_references, p=norm)
+				disambiguating_reference = disambiguating_reference_raw
+				references_already_used.append(disambiguating_reference)
 
 				# If it is the first entry of the sentence, it should be capitalized
 				if placeholder_name_index == 0:
-					disambiguating_reference = disambiguating_reference.capitalize()
+
+					# Capitalize first letter only, otherwise it somehow deletes other capital letters
+					disambiguating_reference_letterlist = list(disambiguating_reference)
+					disambiguating_reference_letterlist[0] = disambiguating_reference_letterlist[0].capitalize()
+					disambiguating_reference = "".join(disambiguating_reference_letterlist)
 
 
 				# Replace the placeholder with the new reference
@@ -196,6 +235,26 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 				else:
 					print("Player is not in the sentence! \n")
 				continue
+
+			# If this all doesn't hold, then it means that it is not the first mention, no pronoun can be used,
+			# and the player hasn't been mentioned in the previous or current sentence, thus full name needs to
+			# be used again
+			else:
+				# Check if placeholder is found
+				if (placeholder_name_index != -1):
+					letterlist = list(sentence_to_change)
+					# Delete the opening curly bracket
+					del letterlist[placeholder_name_index]
+
+					# Delete the closing curly bracket
+					del letterlist[placeholder_name_index + len(player)]
+
+					new_sentence = "".join(letterlist)
+					sentence_to_change = new_sentence
+					sentences[sentence_number] = sentence_to_change
+				else:
+					print("Player is not in the sentence! \n")
+
 
 		if mentions_without_pronoun>1:
 			pprint.pprint(ambiguousreferents)
@@ -232,8 +291,13 @@ def AmbiguousReferents(currentplayer,mentionidx,sentences,mentionedentities):
 		#if previous gaps are not mentions of this player, it is a competing antecedent in same sentence
 		if len(previousgapsthissent)!=len(prev_mentions_this_player_this_sent):
 			competing_antecedent_same_sent = True
-			other_players_this_sent = [mentionedentities[entity] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']==currentsentidx and mention['gapidx']<currentgapidx and 'c_Person' in mentionedentities[entity]['entityinfo'] and mentionedentities[entity]['entityinfo']!=playerinfo]
-			ambiguousplayers = other_players_this_sent
+			other_players_this_sent = [mentionedentities[entity]['mentions'] for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']==currentsentidx and mention['gapidx']<currentgapidx and 'c_Person' in mentionedentities[entity]['entityinfo'] and mentionedentities[entity]['entityinfo']!=playerinfo]
+			other_players_this_sent = other_players_this_sent[0]
+			other_players_this_sent2 = []
+			for other_player in other_players_this_sent:
+				if other_player['sentidx'] == currentsentidx:
+					other_players_this_sent2.append(other_player)
+			ambiguousplayers = other_players_this_sent2
 	#is there maybe an entity mentioned in a previous sentence?
 	previousgaps = [mention for entity in mentionedentities for mention in mentionedentities[entity]['mentions'] if mention['sentidx']<currentsentidx and mention['sentidx']>(currentsentidx-2) and mentionedentities[entity]['entityinfo'] != playerinfo]
 	if len(previousgaps)>0:
@@ -615,7 +679,8 @@ def PlayerReferringExpression(playerinfo, jsongamedata, homeaway, gap, **kwargs)
 		#if previous gaps are not mentions of this player, it is a competing antecedent in same sentence
 		if len(previousgapsthissent)>0:
 			competing_antecedent_same_sent = True
-	
+	else:
+		previousgapsthissent = []
 	#TODO: If this is NOT the first occurrence of this player in this sent, 
 	#      and there is a competing antecedent, I can disambiguate these two players
 	
@@ -655,15 +720,27 @@ def disambiguatingReferringExpression(targetplayerinfo,otherplayersinfo, **kwarg
 	targetplayerdata = getPlayerData(targetplayerinfo,**kwargs)
 	#get the last team of the player
 	currentteamtarget = targetplayerinfo['c_Team']
-	for season in reversed(targetplayerdata['PlayerLeague']):
-		if season['c_Team'] != currentteamtarget:
-			formerteamtarget = season['c_Team']
+	league_list = targetplayerdata['PlayerLeague']
+
+	# Check all seasons that this player played so far
+	for season in reversed(league_list):
+
+		# Find the season that the player played in at the time of the report
+		if season['c_Team'] == currentteamtarget:
+			index = league_list.index(season)
+
+			# Find the team the player played before this one (if possible)
+			for season_index in reversed(range(index)):
+				if league_list[season_index]['c_Team'] != currentteamtarget:
+					formerteamtarget = league_list[season_index]['c_Team']
+					break
 			break
-	#if we have no info...
+
+	# If we have no info...
 	if formerteamtarget == '':
 		prevteamdisambiguates = False
 	
-	#if our targetplayer is not a captain, this is not a good feature
+	# If our targetplayer is not a captain, this is not a good feature
 	if targetplayerinfo['b_Captain']==False:
 		listoffeatures.pop(0)
 		featureisdisambiguating.pop(0)
@@ -673,7 +750,7 @@ def disambiguatingReferringExpression(targetplayerinfo,otherplayersinfo, **kwarg
 			if targetplayerinfo[listoffeatures[idx]]==player['entityinfo'][listoffeatures[idx]]:
 				featureisdisambiguating[idx] = False
 		playerdata = getPlayerData(player['entityinfo'],**kwargs)
-		previousteams = [season['c_Team'] for seasons in targetplayerdata['PlayerLeague']]
+		previousteams = [seasons['c_Team'] for seasons in playerdata['PlayerLeague']]
 		if formerteamtarget in previousteams:
 			prevteamdisambiguates = False
 	
@@ -686,18 +763,18 @@ def disambiguatingReferringExpression(targetplayerinfo,otherplayersinfo, **kwarg
 			if featurename=='b_Captain':
 				disambiguatedReferents.append(['de aanvoerder', 10])
 			if featurename=='n_ShirtNr':
-				disambiguatedReferents.append(['nummer '+str(targetplayerinfo['n_ShirtNr'])+'',2])
+				disambiguatedReferents.append(['de nummer '+str(targetplayerinfo['n_ShirtNr'])+'',2])
 			if featurename=='c_Function':
 				disambiguatedReferents = disambiguatedReferents + PlayerReferenceIndefinite(targetplayerinfo)
 			if featurename=='c_PersonNatioShort':
 				countryInfo = getCountryNames(targetplayerinfo[featurename],**kwargs)
 				if countryInfo:
-					disambiguatedReferents.append(['de '+countryInfo['Demonym'], 10]) #de Duits
-					disambiguatedReferents.append(['de '+countryInfo['Adjective']+'e speler', 8])
+					disambiguatedReferents.append(['de '+countryInfo['Demonym'], 5]) #de Duits
+					disambiguatedReferents.append(['de '+countryInfo['Adjective']+'e speler', 3])
 					#TODO: This is actually disambiguating on TWO characteristics
 					#de Duitse middenvelder
 					for role in roles:
-						disambiguatedReferents.append([role.replace('de ','de '+countryInfo['Adjective']+'e ',1), 7])
+						disambiguatedReferents.append([role.replace('de ','de '+countryInfo['Adjective']+'e ',1), 10])
 	if prevteamdisambiguates:
 		disambiguatedReferents.append(['de voormalig '+formerteamtarget+' speler', 5])
 		disambiguatedReferents.append(['de voormalig speler van ' +formerteamtarget, 5])

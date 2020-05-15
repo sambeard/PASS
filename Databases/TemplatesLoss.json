@@ -184,7 +184,7 @@
         "<#goal scorer> schoot na <minute> minuten spelen snoeihard raak.",
         "Na <minute> minuten kon <#goal scorer> de <home goals>-<away goals> binnen schieten.",
         "<#goal scorer> tekende in de <minute>e minuut voor de <home goals>-<away goals>.",
-        "<#goal scorer> tekende de 0-2 aan in de <minute>e minuut.",
+        "<#goal scorer> tekende de <home goals>-<away goals> aan in de <minute>e minuut.",
         "In de <minute>e minuut verschalkte <#goal scorer> <goalkeeper focus team>: <home goals>-<away goals>.",
         "<#goal scorer> scoorde de <home goals>-<away goals> (<minute>.).",
         "<#goal scorer> tikte de <home goals>-<away goals> binnen (<minute>.).",

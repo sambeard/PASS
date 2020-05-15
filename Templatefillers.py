@@ -231,6 +231,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 				gk = person
 				break
 		playertuple = PlayerPlaceholder(gk, jsongamedata, homeaway, gap, **kwargs)
+		return playertuple
 	elif gap == 'goalkeeper other team':
 		teamnumber = 1
 		if homeaway == 'home':
