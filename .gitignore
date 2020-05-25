@@ -10,4 +10,5 @@ JSONPlayerData/*.json
 !/JSONGameData/her_gra_20180921.json
 !/JSONGameData/nec_vvv_20100807.json
 !/JSONGameData/psv_fey_20101024.json
+/Data
 *.p
