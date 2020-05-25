@@ -1,6 +1,7 @@
 __pycache__
 *.pyc
 JSONGameData/*20*.json
+JSONGameData/Eredivisie
 JSONPlayerData/*.json
 !/JSONPlayerData/player_1011578.json
 !/JSONPlayerData/player_1028621.json
@@ -11,4 +12,5 @@ JSONPlayerData/*.json
 !/JSONGameData/nec_vvv_20100807.json
 !/JSONGameData/psv_fey_20101024.json
 /Data
+.venv
 *.p
