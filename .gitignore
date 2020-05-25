@@ -1,4 +1,13 @@
 __pycache__
 *.pyc
 JSONGameData/*20*.json
+JSONPlayerData/*.json
+!/JSONPlayerData/player_1011578.json
+!/JSONPlayerData/player_1028621.json
+!/JSONPlayerData/player_1064273.json
+!/JSONPlayerData/player_1064340.json
+!/JSONGameData/ado_aja_20190224.json
+!/JSONGameData/her_gra_20180921.json
+!/JSONGameData/nec_vvv_20100807.json
+!/JSONGameData/psv_fey_20101024.json
 *.p

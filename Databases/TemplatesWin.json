@@ -129,7 +129,7 @@
         "<#goal scorer> joeg na <minute> minuten de bal onhoudbaar in de touwen: <home goals>-<away goals>."
     ],
     "Game course, regular goal focus team (with assist)": [
-        "<#goal scorer> ontvangt de bal van <assist giver> en jaagt het leer de winkelhaak in: <home goals>-<away goals>.",
+        "<#goal scorer> ontving de bal van <assist giver> en joeg het leer de winkelhaak in: <home goals>-<away goals>.",
         "Uit een steekpass van <assist giver> schiet <#goal scorer> op vakkundige wijze de <home goals>-<away goals> binnen.",
         "<#assist giver> bracht <goal scorer> na <minute> minuten in stelling, die de trekker overhaalde: <home goals>-<away goals>.",
         "<#goal scorer> werd na <minute> minuten diep gestuurd door <assist giver>, en schoot de <home goals>-<away goals> binnen.",
@@ -139,7 +139,7 @@
         "<#assist giver> vond <goal scorer>, die vervolgens verwoestend uithaalde: <home goals>-<away goals>.",
         "<#assist giver> vond <goal scorer> die doeltreffend uithaalde: <home goals>-<away goals>.",
         "<#assist giver> bood in de <minute>e minuut <goal scorer> een niet te missen kans: <home goals>-<away goals>.",
-        "Na <minute> minuten legde <#assist giver> op het juiste moment af op de afrondende <goal scorer>: <home goals>-<away goals>.",
+        "Na <minute> minuten legde <#assist giver> op het juiste moment af op <goal scorer>: <home goals>-<away goals>.",
         "<#assist giver> lanceerde <goal scorer>, die vervolgens raak schoot: <home goals>-<away goals> (<minute>.).",
         "In de <minute>e minuut vond <#assist giver> <goal scorer> die scoorde: <home goals>-<away goals> (<minute>.)."
     ],
@@ -201,7 +201,7 @@
     ],
     "Game course, regular goal other team (with assist)": [
         "In de <minute>e minuut bediende <#assist giver> <goal scorer> op maat: <home goals>-<away goals>.",
-        "Na <minute> minuten was <goal scorer> koelbloedig na een prachtige assist van <assist giver> en verschalkte hij <goalkeeper focus team>: <home goals>-<away goals>.",
+        "Na <minute> minuten scoorde <goal scorer> uit een assist van <assist giver>: <home goals>-<away goals>.",
         "<#assist giver> vond na <minute> minuten <goal scorer>: <home goals>-<away goals>."
     ],
     "Game course, regular goal other team (early goal)": [],
@@ -213,7 +213,7 @@
     ],
     "Game course, regular goal other team (aansluitingstreffer)": [
         "Via een treffer van <goal scorer> in de <minute>e minuut werd het vervolgens nog spannend.",
-        "Via <goal scorer> kwam <#focus team> nog wel terug tot <home goals>-<away goals>.",
+        "Via <goal scorer> kwam <#other team> nog wel terug tot <home goals>-<away goals>.",
         "De door <other team> gezochte aansluitingstreffer kwam er in de <minute>e minuut toen <#goal scorer> doeltrof: <home goals>-<away goals>.",
         "<#other team> kwam via een doelpunt van <goal scorer> in de <minute>e minuut terug tot <home goals>-<away goals>."
     ],

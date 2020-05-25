@@ -45,6 +45,8 @@ currentpath = os.getcwd()
 
 #main(os.path.dirname(currentpath) + '/Europa_League/NewInfoXMLs/rea_aja_5032019.xml', 'y')
 main(currentpath + '/JSONGameData/2goals_1scorer_succession.json', 'y')
+#main(currentpath + '/JSONGameData/Eredivisie/2015-2016/gra_psv_20151031.json', 'y')
+
 
 #if __name__ == '__main__':
     #main(sys.argv[1:])

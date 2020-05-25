@@ -107,9 +107,7 @@
         "In de <minute>e minuut tikte <#goal scorer> de <home goals>-<away goals> binnen.",
         "<#goal scorer> trof in de <minute>e minuut doel: <home goals>-<away goals>.",
         "<#goal scorer> tikte in de <minute>e minuut de <home goals>-<away goals> binnen.",
-        "<#goal scorer> tekende in de <minute>e minuut voor <home goals>-<away goals>.",
-        "In de <minute>e minuut moest de doelman van <not scoring team> zich gewonnen geven na een doelpoging van <goal scorer>: <home goals>-<away goals>.",
-        "De sluitpost van <not scoring team> werd na <minute> minuten geklopt door een treffer van <goal scorer>."
+        "<#goal scorer> tekende in de <minute>e minuut voor <home goals>-<away goals>."
     ],
     "Game course, regular goal (with assist)": [
         "In de <minute>e minuut schoot <#goal scorer> raak na een pass van <assist giver>.",

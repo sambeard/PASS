@@ -1,3 +1,4 @@
+import math
 import sys
 import os.path
 import xlrd
@@ -172,7 +173,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		try:
 			team = event['team']
 			club = jsongamedata['MatchInfo'][0]['c_' + team.capitalize() + 'Team']
-			clubtuple = ClubReferenceModel(team, jsongamedata, homeaway, gap, **kwargs)
+			clubtuple = ClubReferenceModel(club, jsongamedata, homeaway, gap, **kwargs)
 			return clubtuple
 		except TypeError:
 			print(event)
@@ -420,7 +421,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		subs = [event for event in jsongamedata['MatchActions'] if event['n_ActionSet']==5]
 		for sub_event in subs:
 			if sub_event['c_Person'] == player:
-				sub_minute = float(c_ActionMinute['minute'].replace("+",".").strip("'"))
+				sub_minute = float(sub_event['c_ActionMinute']['minute'].replace("+",".").strip("'"))
 				minsub = math.ceil(minute - sub_minute)
 				break
 		return minsub
