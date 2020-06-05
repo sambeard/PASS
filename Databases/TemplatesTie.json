@@ -270,7 +270,7 @@
         "<#goal scorer> pegelde de bal na <minute> minuten voorbij <goalkeeper focus team>: <home goals>-<away goals>.",
         "<#goal scorer> schoot de bal na <minute> minuten onbereikbaar in het doel: <home goals>-<away goals>.",
         "<#goal scorer> schoot in de <minute>e minuut de <home goals>-<away goals> in het doel.",
-        "In de 86e minuut was <#goalkeeper focus team> kansloos bij een poeier van <goal scorer>: <home goals>-<away goals>.",
+        "In de <minute>e minuut was <#goalkeeper focus team> kansloos bij een poeier van <goal scorer>: <home goals>-<away goals>.",
         "Na <minute> minuten kon <#goal scorer> de bal inschieten: <home goals>-<away goals>.",
         "Na <minute> minuten was het <home goals>-<away goals> door <goal scorer>.",
         "Na <minute> minuten was <#goal scorer> het die een aanval doeltreffend wist af te ronden: <home goals>-<away goals>.",

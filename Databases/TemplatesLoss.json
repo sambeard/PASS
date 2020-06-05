@@ -243,7 +243,7 @@
     ],
     "Game course, regular goal other team (final goal)": [	
         "In de <minute>e minuut bepaalde <#goal scorer> de eindstand op <home goals>-<away goals>.",
-        "In de <minute>e schoot <#goal scorer> de <home goals>-<away goals> tegen de touwen en werden de drie punten veiliggesteld.",
+        "In de <minute>e minuut scoorde <#goal scorer> de <home goals>-<away goals> en werden de drie punten veiliggesteld.",
         "<#goal scorer> kon het vonnis voltrekken: <home goals>-<away goals> (<minute>.).",
         "<#other team> kreeg in de <minute>e minuut de winst helemaal in de schoot geworpen: <#goalkeeper focus team> had het nakijken op een schot van <goal scorer>: <home goals>-<away goals>.",
         "Na <minute> minuten scoorde <#goal scorer> nog: <home goals>-<away goals>."

@@ -10,7 +10,7 @@ from math import ceil
 from operator import itemgetter
 import Ruleset_module as Ruleset
 from Ruleset_module import secondgoal
-from Reference_variety_module import PlayerReferenceModelWithPronouns, ClubReferenceModel, RefereeReferenceModel
+from Reference_variety_module import PlayerPlaceholder, ClubReferenceModel, RefereeReferenceModel
 from datetime import datetime,timedelta
 import pdb
 
@@ -154,7 +154,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		if gap == 'number of goals':
 			totalgoals = awaygoals + homegoals
 			return 'goal ' + str(totalgoals)
-	elif (gap == 'goal scorer') or (gap == 'twice yellow player') or (gap == 'red player') or (gap == 'own goal scorer') or (gap == 'penalty taker') or (gap == 'yellow card player'):
+	elif (gap == 'goal scorer') or (gap == 'twice yellow player') or (gap == 'red player') or (gap == 'own goal scorer') or (gap == 'penalty taker') or (gap == 'yellow card player') or (gap == 'substitute in'):
 		event = kwargs['event']
 		try:
 			player = event['player']
@@ -174,6 +174,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			playertuple = player['c_Person']
 		else:
 			playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'scoring team':
 		event = kwargs['event']
@@ -232,7 +233,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if (isinstance(player, str) and person['c_Person']==player) or (person==player):
 				player = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'goalkeeper focus team':
 		teamnumber = 1
@@ -243,7 +244,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if person['n_FunctionCode']==1 and person['n_HomeOrAway']==teamnumber:
 				gk = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(gk, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(gk, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'goalkeeper other team':
 		teamnumber = 1
@@ -253,7 +254,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if person['n_FunctionCode']==1 and person['n_HomeOrAway']==teamnumber:
 				gk = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(gk, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(gk, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'focus team manager':
 		teamnumber = 1
@@ -263,7 +264,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if person['n_FunctionCode']&16 and person['n_HomeOrAway']==teamnumber:
 				manager = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(manager, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'other team manager':
 		teamnumber = 1
@@ -273,7 +274,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if person['n_FunctionCode']&16 and person['n_HomeOrAway']==teamnumber:
 				manager = person
 				break			 
-		playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(manager, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'winning team manager':
 		eventlist = kwargs['eventlist']
@@ -369,7 +370,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if (isinstance(player, str) and person['c_Person']==player) or (person==player):
 				player = person
 				break
-		playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'goal scorer 2':
 		event = kwargs['event']
@@ -379,7 +380,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			if (isinstance(player, str) and person['c_Person']==player) or (person==player):
 				player = person
 				break		
-		playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'minute 1':
 		event = kwargs['event']
@@ -527,6 +528,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		for sub_event in subs:
 			if sub_event['c_Person'] == player:
 				sub_minute = float(sub_event['c_ActionMinute'].replace("+",".").strip("'"))
+				sub_minute = float(sub_event['c_ActionMinute']['minute'].replace("+",".").strip("'"))
 				minsub = math.ceil(minute - sub_minute)
 				break
 		return minsub
@@ -580,7 +582,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 					if (person['c_Person']==playername):
 						player = person
 						break
-		playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'biggest goal difference home goals':
 		gamecourselist = kwargs['gamecourselist']
