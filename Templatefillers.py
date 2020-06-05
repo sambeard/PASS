@@ -173,7 +173,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			# For substitutes, only use full name
 			playertuple = player['c_Person']
 		else:
-			playertuple = PlayerReferenceModelWithPronouns(player, jsongamedata, homeaway, gap, **kwargs)
+			playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'scoring team':
@@ -315,7 +315,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 				if person['n_FunctionCode']&16 and person['n_HomeOrAway']==teamnumber:
 					manager = person
 					break
-			playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+			playertuple = PlayerPlaceholder(manager, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'losing team manager':
 		eventlist = kwargs['eventlist']

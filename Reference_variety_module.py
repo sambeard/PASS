@@ -86,19 +86,22 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 				current_season = playerdata['PlayerLeague'][idx]
 				last_season = playerdata['PlayerLeague'][idx-1]
 				break
+
 		last_season_stats = {}
-		last_season_stats['club'] = last_season['c_Team']
-		last_season_stats['matches'] = last_season['n_Matches']
-		last_season_stats['goals'] = last_season['n_Goals']
+		if last_season is not False:
+			last_season_stats['club'] = last_season['c_Team']
+			last_season_stats['matches'] = last_season['n_Matches']
+			last_season_stats['goals'] = last_season['n_Goals']
+			last_season_stats['assists'] = last_season['n_Assists']
 
 		# Save the player with the most goals last season, as he is probably the most interesting to mention. Only do
 		# this for the aimed team, and not for neutral
 		if mentionedentities[player]['entityinfo']['c_Team'] == focusteam:
-			if last_season['n_Goals'] > most_goals:
+			if last_season is not False and last_season['n_Goals'] > most_goals:
 				most_goals = last_season['n_Goals']
 				player_with_most_goals_last_season = player
 
-		last_season_stats['assists'] = last_season['n_Assists']
+
 		players_last_season_stats[player] = last_season_stats
 
 	# The players that get mentioned only once always get their full name mentioned.

@@ -286,7 +286,7 @@
 		"Bij een <home goals>-<away goals> stand, werden er 3 spelers in successie gewisseld. <substitute in 1>, <substitute in 2> en <substitute in 3> mochten het veld betreden."	
 	],
 	"Game course, substitution (two consecutive and tieing)": [
-		"Bij een <home goals>-<away goals> stand, werden er 2 spelers in successie gewisseld. <substitute in 1>, <substitute in 2> en <substitute in 3> mochten het veld betreden."
+		"Bij een <home goals>-<away goals> stand, werden er 2 spelers in successie gewisseld. <substitute in 1>, <substitute in 2> mochten het veld betreden."
 	],
     "Game statistics, yellow cards (multiple)": [
         "Er werden <number of yellow cards> gele kaarten uitgedeeld aan de zijde van <focus team> voor <focus team yellow card players> en aan de zijde van <other team> voor <other team yellow card players>.",
