@@ -36,15 +36,26 @@ def PlayerPlaceholder(playerinfo, jsongamedata, homeaway, gap, **kwargs):
 		mentiontype = ReferenceType.DEFINITE
 
 	# Also attach whether a nominative pronoun should be used if applicable
-	mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,
-									   'gapidx': currentgapidx, 'nominal': nominal})
+	if isManager(playerinfo):
+		mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,'gapidx': currentgapidx, 'nominal': nominal})
+		elems, norm = PlayerDefiniteDescription(playerinfo)
+		manager_reference = numpy.random.choice(elems, p=norm)
+		return manager_reference
+	elif isReferee(playerinfo):
+		mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,'gapidx': currentgapidx, 'nominal': nominal})
+		referee_reference = RefereeReferenceModel(playerinfo, jsongamedata, homeaway,currentgapidx)
+		return referee_reference
 
-	return	'{'+playerfullname+'}'
+	else:
+		mentionedentities[playerfullname]['mentions'].append({ 'sentidx': currentsentidx,'gapidx': currentgapidx, 'nominal': nominal})
+		return	'{'+playerfullname+'}'
 
 def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 	mentionedentities = kwargs['mentionedentities']
 	home_team = jsongamedata['MatchInfo'][0]['c_HomeTeam']
 	away_team = jsongamedata['MatchInfo'][0]['c_AwayTeam']
+	managers = []
+	referees = []
 
 	# Determine focus team
 	if homeaway == 'home':
@@ -60,7 +71,71 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 	# Filter the non-footballers (managers, referees)
 	for player in all_players:
 		if ((mentionedentities[player]['entityinfo']['n_ActionSet'] != 4) and (mentionedentities[player]['entityinfo']['n_ActionSet'] != 5)):
+			if isManager(mentionedentities[player]['entityinfo']):
+				managers.append(player)
+			else:
+				referees.append(player)
 			all_players.remove(player)
+
+	# # First give the manager mentions an expression
+	# for manager in managers:
+	# 	for managermention in mentionedentities[manager]['mentions']:
+	#
+	# 		# Find the sentence and gaps for these managers
+	# 		placeholder_string_to_change = '{' + manager + '}'
+	# 		sentence_number = managermention['sentidx']
+	# 		gap_number = managermention['gapidx']
+	# 		sentence_to_change = sentences[sentence_number]
+	# 		placeholder_name_index = sentence_to_change.find(placeholder_string_to_change)
+	# 		managerinfo = mentionedentities[manager]['entityinfo']
+	# 		manager_full_name, manager_reference = PlayerReferenceModelWithPronouns(managerinfo, jsongamedata, homeaway, 0, idx= sentence_number, gapidx= gap_number, mentionedentities=mentionedentities)
+	#
+	# 		# Replace the placeholder with the new reference
+	# 		# Check if placeholder is found
+	# 		if (placeholder_name_index != -1):
+	# 			letterlist = list(sentence_to_change)
+	# 			# Delete the placeholder playername
+	# 			del letterlist[placeholder_name_index:(placeholder_name_index + len(placeholder_string_to_change))]
+	#
+	# 			# Add the manager_reference where the placeholder name was before
+	# 			for letter in reversed(manager_reference):
+	# 				letterlist.insert(placeholder_name_index, letter)
+	#
+	# 			new_sentence = "".join(letterlist)
+	# 			sentence_to_change = new_sentence
+	# 			sentences[sentence_number] = sentence_to_change
+	# 		else:
+	# 			print("Manager: " + manager + " is not in the sentence! \n")
+
+	# Then the same for each referee mention
+	# for referee in referees:
+	#
+	# 	# Find the sentence and gaps for these referees
+	# 	placeholder_string_to_change = '{' + referee + '}'
+	# 	sentence_number = mentionedentities[referee]['mentions'][0]['sentidx']
+	# 	gap_number = mentionedentities[referee]['mentions'][0]['gapidx']
+	# 	sentence_to_change = sentences[sentence_number]
+	# 	placeholder_name_index = sentence_to_change.find(placeholder_string_to_change)
+	# 	refereeinfo = mentionedentities[referee]['entityinfo']
+	# 	referee_reference = PlayerReferenceModelWithPronouns(refereeinfo, jsongamedata, homeaway, 0, idx= sentence_number, gapidx= gap_number, mentionedentities=mentionedentities)
+	#
+	# 	# Replace the placeholder with the new reference
+	# 	# Check if placeholder is found
+	# 	if (placeholder_name_index != -1):
+	# 		letterlist = list(sentence_to_change)
+	# 		# Delete the placeholder playername
+	# 		del letterlist[placeholder_name_index:(placeholder_name_index + len(placeholder_string_to_change))]
+	#
+	# 		# Add the referee_reference where the placeholder name was before
+	# 		for letter in reversed(referee_reference):
+	# 			letterlist.insert(placeholder_name_index, letter)
+	#
+	# 		new_sentence = "".join(letterlist)
+	# 		sentence_to_change = new_sentence
+	# 		sentences[sentence_number] = sentence_to_change
+	# 	else:
+	# 		print("Referee: " + referee + " is not in the sentence! \n")
+
 
 	important_players = all_players.copy()
 	players_mention_num = [len(mentionedentities[player]['mentions']) for player in all_players if len(mentionedentities[player]['mentions'])>1]
@@ -75,6 +150,7 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 	player_with_most_goals_last_season = ""
 	most_goals = 0
 	for player in all_players:
+		last_season = False
 		playerdata = getPlayerData(mentionedentities[player]['entityinfo'], **kwargs)
 		for idx in range(len(playerdata['PlayerLeague'])):
 			if playerdata['PlayerLeague'][idx]['c_Edition'] == current_season_year and idx == 0:
@@ -175,6 +251,7 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 		mentions_without_pronoun = 0
 		ambiguousreferents = []
 		references_already_used = []
+		potential_sentences = []
 		for mentionidx, mention in reversed(list(enumerate(mentionedentities[player]['mentions']))):
 			can_use_pronoun, ambiguousreferentsthissent = AmbiguousReferents(player,mentionidx,sentences,mentionedentities)
 
@@ -705,6 +782,7 @@ def PlayerDefiniteDescription(playerinfo):
 		namepossibilities.append(['manager ' + lastname, 5])
 		namepossibilities.append(['manager ' + fullname, 5])
 
+
 	elems = [i[0] for i in namepossibilities]
 	probs = [i[1] for i in namepossibilities]
 	norm = [float(i) / sum(probs) for i in probs]
@@ -869,6 +947,9 @@ def PlayerReferringExpression(playerinfo, jsongamedata, homeaway, gap, **kwargs)
 	
 def isManager(playerinfo):
 	return playerinfo['n_FunctionCode']&16
+
+def isReferee(playerinfo):
+	return playerinfo['n_FunctionCode']&64
 
 def disambiguatingReferringExpression(targetplayerinfo,otherplayersinfo, **kwargs):
 	#captain, role, shirt number, nationality

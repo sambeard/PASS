@@ -223,11 +223,11 @@
         "<#penalty taker> hielp de gegeven strafschop in de <minute>e minuut om zeep."
     ],
 	"Game course, substitution (all purpose)": [
-        "Toen mocht <substitute in> het veld verlaten voor <substitute out>.",
-		"<substitute in> kwam vervolgens het veld in voor <substitute out>.",
-		"In de <minute>e minuut was het tijd voor een wissel: <substitute in> verving <substitute out>.",
+        "Toen mocht <#substitute in> het veld verlaten voor <substitute out>.",
+		"<#substitute in> kwam vervolgens het veld in voor <substitute out>.",
+		"In de <minute>e minuut was het tijd voor een wissel: <#substitute in> verving <substitute out>.",
 		"<#substitute in> kwam er toen in voor <substitute out>.",
-		"Toen kwam er een wissel: <substitute in> kwam het veld op voor <substitute out>."
+		"Toen kwam er een wissel: <#substitute in> kwam het veld op voor <substitute out>."
     ],
 	"Game course, substitution (double)": [
 		"Vervolgens een dubbele wissel."
@@ -242,7 +242,7 @@
 		"<#focus team manager> besloot 3 keer achter elkaar te wisselen."
 	],
 	"Game course, substitution (winning)": [
-		"<#winning team manager> probeerde tevergeefs de voorsprong vast te houden door in de <minute>e minuut te wisselen: <substitute in> kwam het veld in voor <substitute out>.",
+		"<#winning team manager> probeerde de voorsprong vast te houden door in de <minute>e minuut te wisselen: <substitute in> kwam het veld in voor <substitute out>.",
 		"<#winning team manager> dacht mede dankzij <substitute out> te wisselen voor <substitute in> de wedstrijd over de streep te trekken."
 	],
 	"Game course, substitution (losing)": [

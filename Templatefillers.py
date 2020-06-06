@@ -174,7 +174,6 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 			playertuple = player['c_Person']
 		else:
 			playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
-		playertuple = PlayerPlaceholder(player, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'scoring team':
 		event = kwargs['event']
@@ -356,7 +355,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 				if person['n_FunctionCode'] & 16 and person['n_HomeOrAway'] == teamnumber:
 					manager = person
 					break
-			playertuple = PlayerReferenceModelWithPronouns(manager, jsongamedata, homeaway, gap, **kwargs)
+			playertuple = PlayerPlaceholder(manager, jsongamedata, homeaway, gap, **kwargs)
 		return playertuple
 	elif gap == 'time between goals':
 		event = kwargs['event']
@@ -528,7 +527,7 @@ def templatefillers(jsongamedata, homeaway, gap, **kwargs):
 		for sub_event in subs:
 			if sub_event['c_Person'] == player:
 				sub_minute = float(sub_event['c_ActionMinute'].replace("+",".").strip("'"))
-				sub_minute = float(sub_event['c_ActionMinute']['minute'].replace("+",".").strip("'"))
+				#sub_minute = float(sub_event['c_ActionMinute']['minute'].replace("+",".").strip("'"))
 				minsub = math.ceil(minute - sub_minute)
 				break
 		return minsub

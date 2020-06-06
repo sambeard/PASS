@@ -183,7 +183,6 @@
         "<#goal scorer> tekende in de <minute>e minuut voor de <home goals>-<away goals>.",
         "Na <minute> minuten schoof <#goal scorer> de bal in het doel: <home goals>-<away goals> (<minute>.).",
         "In de <minute>e minuut haalde <goal scorer> prachtig uit: <home goals>-<away goals>.",
-        "In de <minute>e minuut schoot <#goal scorer> de bal in het doel en liet hij het <stadium> juichen.",
         "<#goal scorer> zette de <home goals>-<away goals> op het scorebord na <minute> minuten.",
         "Na <minute> minuten liet <#goal scorer> <other team clubname>-doelman <goalkeeper other team> kansloos: <home goals>-<away goals>.",
         "<other team clubname>-doelman <goalkeeper other team> kon in de <minute>e minuut de <home goals>-<away goals> niet voorkomen.",
@@ -448,7 +447,7 @@
 		"In de <minute>e minuut was het tijd voor een wissel: <substitute in> verving <substitute out>.",
 		"<substitute in> kwam er toen in voor <substitute out>.",
 		"Toen kwam er een wissel aan de kant van <focus team>: <substitute in> kwam het veld op voor <substitute out>.",
-		"<#focus team manager> voerde vervolgens een wissel door: <substitute out> verliet het veld voor <substitute in>.",
+		"<#focus team manager> voerde vervolgens een wissel door: <substitute out> verliet het veld voor <substitute in>."
     ],
 	"Game course, substitution focus team (double)": [
 		"Now there is a double substitution for <focus team>."
@@ -529,7 +528,7 @@
         "<#referee> was genoodzaakt <number of yellow cards> gele kaarten te geven, aan <yellow card players>.",
         "Aan het eind van de wedstrijd had <#referee> <number of yellow cards> gele kaarten in zijn boekje genoteerd, deze waren voor <yellow card players>.",
         "<#focus team yellow card players> van <focus team> en <#other team yellow card players> van <other team> pakten een gele kaart.",
-        "De wedstrijd eindigde met drie gele kaarten voor <yellow card players>."
+        "De wedstrijd eindigde met <number of yellow cards> gele kaarten voor <yellow card players>."
     ],
     "Game statistics, yellow cards (one)": [
         "Alleen <#yellow card player> van <yellow team> kreeg geel.",
