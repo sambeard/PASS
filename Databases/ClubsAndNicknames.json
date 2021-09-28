@@ -1,0 +1,442 @@
+{
+    "ADO Den Haag": {
+        "MASC Club Name": "ADO Den Haag",
+        "Goal Club Name": "ADO Den Haag",
+        "League": "Eredivisie",
+        "City": "Den Haag",
+        "Nicknames": [
+            "de Residentieclub",
+            "FC Den Haag",
+            "de Hagenezen",
+            "de Hagenaars"
+        ]
+    },
+    "Roda JC Kerkrade": {
+        "MASC Club Name": "Roda JC Kerkrade",
+        "Goal Club Name": "Roda JC Kerkrade",
+        "League": "Eredivisie",
+        "City": "Kerkrade",
+        "Nicknames": [
+            "de Trots van het Zuiden",
+            "Koempels",
+            "de Kerkraders"
+        ]
+    },
+    "Feyenoord": {
+        "MASC Club Name": "Feyenoord",
+        "Goal Club Name": "Feyenoord",
+        "League": "Eredivisie",
+        "City": "Rotterdam",
+        "Nicknames": [
+            "de club van het volk",
+            "de Stadionclub",
+            "de Trots van Zuid",
+            "de Rotterdammers",
+            "de Feyenoorders",
+            "de Kakkerlakken"
+        ]
+    },
+    "AZ": {
+        "MASC Club Name": "AZ",
+        "Goal Club Name": "AZ",
+        "League": "Eredivisie",
+        "City": "Alkmaar",
+        "Nicknames": [
+            "de Kaaskoppen",
+            "de Alkmaarders"
+        ]
+    },
+    "Willem II": {
+        "MASC Club Name": "Willem II",
+        "Goal Club Name": "Willem II",
+        "League": "Eredivisie",
+        "City": "Tilburg",
+        "Nicknames": [
+            "Tricolores",
+            "Superkruiken",
+            "Kruiken",
+            "Stoere Kerels",
+            "Trots van het Voetballand",
+            "de Tilburgers"
+        ]
+    },
+    "Heracles Almelo": {
+        "MASC Club Name": "Heracles Almelo",
+        "Goal Club Name": "Heracles Almelo",
+        "League": "Eredivisie",
+        "City": "Almelo",
+        "Nicknames": [
+            "Heraclieden",
+            "de Almeloërs"
+        ]
+    },
+    "FC Utrecht": {
+        "MASC Club Name": "FC Utrecht",
+        "Goal Club Name": "FC Utrecht",
+        "League": "Eredivisie",
+        "City": "Utrecht",
+        "Nicknames": [
+            "Utreg",
+            "Domstedelingen",
+            "de Utrechters"
+        ]
+    },
+    "Ajax": {
+        "MASC Club Name": "Ajax",
+        "Goal Club Name": "Ajax",
+        "League": "Eredivisie",
+        "City": "Amsterdam",
+        "Nicknames": [
+            "de Joden",
+            "Godenzonen",
+            "de Ajacieden",
+            "de Amsterdammers"
+        ]
+    },
+    "Vitesse": {
+        "MASC Club Name": "Vitesse",
+        "Goal Club Name": "Vitesse",
+        "League": "Eredivisie",
+        "City": "Arnhem",
+        "Nicknames": [
+            "Vitas",
+            "FC Hollywood aan de Rijn",
+            "de Nummer 1 van Gelderland",
+            "de Arnhemmers"
+        ]
+    },
+    "PSV": {
+        "MASC Club Name": "PSV",
+        "Goal Club Name": "PSV",
+        "League": "Eredivisie",
+        "City": "Eindhoven",
+        "Nicknames": [
+            "Philips",
+            "Rood-Witten",
+            "Boeren",
+            "Red White Army",
+            "Lampjes",
+            "Lempkes",
+            "PSV'ers",
+            "de Eindhovenaren"
+        ]
+    },
+    "SC Heerenveen": {
+        "MASC Club Name": "SC Heerenveen",
+        "Goal Club Name": "SC Heerenveen",
+        "League": "Eredivisie",
+        "City": "Heerenveen",
+        "Nicknames": [
+            "de Superfriezen",
+            "Blue-white Army",
+            "Blue-white Vikings",
+            "Fean",
+            "de Heerenveners"
+        ]
+    },
+    "de Graafschap": {
+        "MASC Club Name": "de Graafschap",
+        "Goal Club Name": "de Graafschap",
+        "League": "Eredivisie",
+        "City": "Doetinchem",
+        "Nicknames": [
+            "de Superboeren",
+            "Blauw-witte Zebra's",
+            "Trots van de Achterhoek",
+            "de Doetinchemmers"
+        ]
+    },
+    "FC Groningen": {
+        "MASC Club Name": "FC Groningen",
+        "Goal Club Name": "FC Groningen",
+        "League": "Eredivisie",
+        "City": "Groningen",
+        "Nicknames": [
+            "de Trots van het Noorden",
+            "Green-White Army",
+            "Boeren",
+            "de Groningers"
+        ]
+    },
+    "FC Twente": {
+        "MASC Club Name": "FC Twente",
+        "Goal Club Name": "FC Twente",
+        "League": "Eredivisie",
+        "City": "Enschede",
+        "Nicknames": [
+            "de Tukkers",
+            "Trots van het Oosten",
+            "The Reds",
+            "de Twentenaren",
+            "de Enschedeërs"
+        ]
+    },
+    "PEC Zwolle": {
+        "MASC Club Name": "PEC Zwolle",
+        "Goal Club Name": "PEC Zwolle",
+        "League": "Eredivisie",
+        "City": "Zwolle",
+        "Nicknames": [
+            "de Blauwvingers",
+            "de Zwollenaren"
+        ]
+    },
+    "SC Cambuur": {
+        "MASC Club Name": "SC Cambuur",
+        "Goal Club Name": "SC Cambuur",
+        "League": "Eredivisie",
+        "City": "Leeuwarden",
+        "Nicknames": [
+            "de Geelblauwen",
+            "SCC",
+            "de Leeuwarders"
+        ]
+    },
+    "NEC": {
+        "MASC Club Name": "NEC Nijmegen",
+        "Goal Club Name": "NEC",
+        "League": "Eredivisie",
+        "City": "Nijmegen",
+        "Nicknames": [
+            "NEC'ers",
+            "de Nijmegenaren"
+        ]
+    },
+    "Excelsior": {
+        "MASC Club Name": "Excelsior",
+        "Goal Club Name": "Excelsior",
+        "League": "Eredivisie",
+        "City": "Rotterdam",
+        "Nicknames": [
+            "Oud-papierclub",
+            "de Kralingers",
+            "'t Wonder",
+            "de ster van Kralingen",
+            "de Rotterdammers"
+        ]
+    },
+    "Sparta Rotterdam": {
+        "MASC Club Name": "Sparta Rotterdam",
+        "Goal Club Name": "Sparta Rotterdam",
+        "League": "Jupiler League",
+        "City": "Rotterdam",
+        "Nicknames": [
+            "de Kasteelheren",
+            "de Rood-Witte Gladiatoren",
+            "de Rotterdammers"
+        ]
+    },
+    "VVV-Venlo": {
+        "MASC Club Name": "VVV-Venlo",
+        "Goal Club Name": "VVV-Venlo",
+        "League": "Jupiler League",
+        "City": "Venlo",
+        "Nicknames": [
+            "The Good Old",
+            "de Venlonaren",
+            "de Venloërs"
+        ]
+    },
+    "FC Eindhoven": {
+        "MASC Club Name": "FC Eindhoven",
+        "Goal Club Name": "FC Eindhoven",
+        "League": "Jupiler League",
+        "City": "Eindhoven",
+        "Nicknames": [
+            "de Blauw-witten",
+            "Blue-white Army",
+            "FCE",
+            "de Eindhovenaren"
+        ]
+    },
+    "NAC Breda": {
+        "MASC Club Name": "NAC Breda",
+        "Goal Club Name": "NAC Breda",
+        "League": "Jupiler League",
+        "City": "Breda",
+        "Nicknames": [
+            "de Parel van het Zuiden",
+            "The Yellow Army",
+            "de Bredaërs",
+            "de Bredanaren",
+            "de Ratten",
+            "Yellow Army"
+        ]
+    },
+    "Go Ahead Eagles": {
+        "MASC Club Name": "GA Eagles",
+        "Goal Club Name": "Go Ahead Eagles",
+        "League": "Jupiler League",
+        "City": "Deventer",
+        "Nicknames": [
+            "Kowet",
+            "de Eagles",
+            "Trots aan de IJssel",
+            "de Deventenaren"
+        ]
+    },
+    "FC Emmen": {
+        "MASC Club Name": "FC Emmen",
+        "Goal Club Name": "FC Emmen",
+        "League": "Jupiler League",
+        "City": "Emmen",
+        "Nicknames": [
+            "Emmen",
+            "Rood-Witten",
+            "de Emmenaren"
+        ]
+    },
+    "FC Volendam": {
+        "MASC Club Name": "FC Volendam",
+        "Goal Club Name": "FC Volendam",
+        "League": "Jupiler League",
+        "City": "Volendam",
+        "Nicknames": [
+            "Het Andere Oranje",
+            "de Wijdbroeken",
+            "de Palingboeren",
+            "FCVD",
+            "de Volendammers"
+        ]
+    },
+    "MVV Maastricht": {
+        "MASC Club Name": "MVV Maastricht",
+        "Goal Club Name": "MVV Maastricht",
+        "League": "Jupiler League",
+        "City": "Maastricht",
+        "Nicknames": [
+            "de Sterrendragers",
+            "Sjengen",
+            "Us MVV'ke",
+            "de Maastrichtenaren"
+        ]
+    },
+    "Jong Ajax": {
+        "MASC Club Name": "Jong Ajax",
+        "Goal Club Name": "Jong Ajax",
+        "League": "Jupiler League",
+        "City": "Amsterdam",
+        "Nicknames": [
+            "de Joden",
+            "Godenzonen",
+            "de Ajacieden",
+            "de Amsterdammers"
+        ]
+    },
+    "Jong PSV": {
+        "MASC Club Name": "Jong PSV",
+        "Goal Club Name": "Jong PSV",
+        "League": "Jupiler League",
+        "City": "Eindhoven",
+        "Nicknames": [
+            "Philips",
+            "Rood-Witten",
+            "Boeren",
+            "Red White Army",
+            "Lampjes",
+            "Lempkes",
+            "PSV'ers",
+            "de Eindhovenaren"
+        ]
+    },
+    "Almere City FC": {
+        "MASC Club Name": "Almere City",
+        "Goal Club Name": "Almere City FC",
+        "League": "Jupiler League",
+        "City": "Almere",
+        "Nicknames": [
+            "de Zwarte Schapen",
+            "de Almeerders",
+            "City"
+        ]
+    },
+    "Telstar": {
+        "MASC Club Name": "Telstar",
+        "Goal Club Name": "Telstar",
+        "League": "Jupiler League",
+        "City": "Velsen",
+        "Nicknames": [
+            "de Witte Leeuwen",
+            "de Velsenaren"
+        ]
+    },
+    "Fortuna Sittard": {
+        "MASC Club Name": "Fortuna Sittard",
+        "Goal Club Name": "Fortuna Sittard",
+        "League": "Jupiler League",
+        "City": "Sittard",
+        "Nicknames": [
+            "Fortuna",
+            "de Fortunezen",
+            "FSC",
+            "Fortuna Zitterd",
+            "de Sittarders"
+        ]
+    },
+    "FC Den Bosch": {
+        "MASC Club Name": "FC Den Bosch",
+        "Goal Club Name": "FC Den Bosch",
+        "League": "Jupiler League",
+        "City": "Den Bosch",
+        "Nicknames": [
+            "Blue White Army",
+            "Blue White Dragons",
+            "FCDB",
+            "de Bossenaren",
+            "de Bosschenaren"
+        ]
+    },
+    "Achilles '29": {
+        "MASC Club Name": "Achilles29",
+        "Goal Club Name": "Achilles '29",
+        "League": "Jupiler League",
+        "City": "Groesbeek",
+        "Nicknames": [
+            "de Witzwarten",
+            "de Heikanters",
+            "de Groesbekers"
+        ]
+    },
+    "FC Dordrecht": {
+        "MASC Club Name": "FC Dordrecht",
+        "Goal Club Name": "FC Dordrecht",
+        "League": "Jupiler League",
+        "City": "Dordrecht",
+        "Nicknames": [
+            "de Schapenkoppen",
+            "de Dordrechters"
+        ]
+    },
+    "Helmond Sport": {
+        "MASC Club Name": "Helmond Sport",
+        "Goal Club Name": "Helmond Sport",
+        "League": "Jupiler League",
+        "City": "Helmond",
+        "Nicknames": [
+            "de Spurs",
+            "Helliemond",
+            "Kattenmeppers",
+            "de Helmonders"
+        ]
+    },
+    "FC Oss": {
+        "MASC Club Name": "FC Oss",
+        "Goal Club Name": "FC Oss",
+        "League": "Jupiler League",
+        "City": "Oss",
+        "Nicknames": [
+            "TOP",
+            "de Ossenaren"
+        ]
+    },
+    "RKC Waalwijk": {
+        "MASC Club Name": "RKC Waalwijk",
+        "Goal Club Name": "RKC Waalwijk",
+        "League": "Jupiler League",
+        "City": "Waalwijk",
+        "Nicknames": [
+            "RKC'ers",
+            "de Waalwijkers"
+        ]
+    }
+}

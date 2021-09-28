@@ -1,0 +1,182 @@
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="utf-8" />      
+<html lang="en-US">
+<head>
+<link rel="icon" 
+      type="image/svg" 
+      href="IMAGES/football_logo.svg">
+<link rel="stylesheet"
+	  type="text/css" 
+      href="index-style.css">      
+<title>PASS - Personalized Automated Soccer texts System</title>
+
+<script>
+//"ADO Den Haag", "De Graafschap", ...
+var hometeams = JSON.parse(
+"[]"//###HOMETEAMS###
+);
+
+//"AZ", "Ajax" ],
+var awayteams = JSON.parse(
+"[]"//###AWAYTEAMS###
+);
+
+//"ADO Den Haag" : ["Ajax", "AZ, ..."], ...
+var teamshomesaw = JSON.parse(
+"[]"//###TEAMSHOMESAW###
+);
+
+//"Ajax" : ["ADO Den Haag", "De Graafschap", ..."], ...
+var teamsawaysaw = JSON.parse(
+"[]"//###TEAMSAWAYSAW###
+);
+
+//"ADO Den Haag VS Ajax (2021/03/12)" : "ado_aja_20210312",
+var filenames = JSON.parse(
+"[]"//###AVAILABLEFILES###
+);
+
+</script>
+
+</head>
+<body>
+
+<div id="title">
+	 <a href="http://localhost:8888" class="send-home" title="Go back to the home screen">
+	<img src="IMAGES/football_logo.svg"/ class="logo">
+  	<h1 style="text-align: center">PASS - Personalized Automated Soccer texts System</h1>
+  	</a>
+</div>
+<form action="generate" method="post" class="form" onsubmit="return wereTeamsSelected();">
+    <h3>
+    	<span>Please select one of the available games</span>
+    </h3>
+
+<div class="group"> 
+	<label>Home team:</label> <br /> 
+	<select name="selectHome" id="selectHome" onchange="getAwayTeam(this.text)"></select>
+</div>
+<div id="central_space"></div>
+<div class="group">
+	<label>Away team:</label> <br /> 
+	<select name="selectAway" id="selectAway" onchange="getHomeTeam(this.text)">
+	</select>
+</div>  
+<br/>
+<input type="hidden" name="filename" id="filename" value="none"/>
+<input type="submit" class="button" value="Generate reports"/>
+</form>
+
+<img src="IMAGES/player_kicking.svg" width="25%" style="margin-top:60px;">
+<script>
+var selectHomeTag = document.getElementById("selectHome");
+
+selectHomeTag.insertAdjacentHTML('afterbegin', '<option value=""" disabled selected>Please choose a team</option>');
+
+//load at "runtime" the available teams in both home and away teams
+for(const homeTeam of hometeams){
+  var option = document.createElement("option");
+  option.text = homeTeam;
+  option.value = homeTeam;
+  selectHomeTag.add(option);
+}
+
+var selectAwayTag = document.getElementById("selectAway");
+
+selectAwayTag.insertAdjacentHTML('afterbegin', '<option value=""" disabled selected>Please choose a team</option>');
+
+for(const awayTeam of awayteams){
+  var option = document.createElement("option");
+  option.text = awayTeam;
+  option.value = awayTeam;
+  selectAwayTag.add(option);
+}
+
+
+//once we select an away team, populate the home team
+function getHomeTeam(awayTeamString) {
+	var awayTeamString = document.getElementById('selectAway').selectedOptions[0].text;
+	if (/.*(19\d\d|20[012]\d).*/.test(awayTeamString)) {
+		return;
+	}
+	
+	document.getElementById('selectAway').style.boxShadow = "";
+	document.getElementById('selectAway').style.animation = "";
+
+	turnOffHighlightAnimation();
+
+	var selectHomeTag = document.getElementById("selectHome");
+	var opponentsArray = teamsawaysaw[awayTeamString];
+	//remove existing teams
+	selectHomeTag.innerHTML = "";
+	selectHomeTag.insertAdjacentHTML('afterbegin', '<option value=""" disabled>Please choose a team</option>');
+	for(var hometeam in opponentsArray){
+	  var option = document.createElement("option");
+	  option.text = opponentsArray[hometeam];
+	  option.value = opponentsArray[hometeam].replace(/ \(\d+\/\d+\/\d+\)/g, "");
+	  selectHomeTag.add(option);	
+	}
+}
+
+//once we select a home team, populate the away team
+function getAwayTeam(homeTeamString) {
+	var homeTeamString = document.getElementById('selectHome').selectedOptions[0].text;
+	if (/.*(19\d\d|20[012]\d).*/.test(homeTeamString)) {
+		return;
+	}
+	
+	turnOffHighlightAnimation();
+	
+	var selectAwayTag = document.getElementById("selectAway");
+	var opponentsArray = teamshomesaw[homeTeamString];
+	//remove existing teams
+	selectAwayTag.innerHTML = "";
+	selectAwayTag.insertAdjacentHTML('afterbegin', '<option value=""" disabled>Please choose a team</option>');
+	for(var awayteam in opponentsArray){
+	  var option = document.createElement("option");
+	  option.text = opponentsArray[awayteam];
+	  option.value = opponentsArray[awayteam].replace(/ \(\d+\/\d+\/\d+\)/g, "");
+	  selectAwayTag.add(option);	
+	}
+}
+
+function turnOffHighlightAnimation() {
+	document.getElementById('selectHome').style.boxShadow = "";
+	document.getElementById('selectHome').style.animation = "";
+	document.getElementById('selectAway').style.boxShadow = "";
+	document.getElementById('selectAway').style.animation = "";
+}
+
+//validation check so you can't press go unless you selected both teams
+function wereTeamsSelected() {
+	var homeTeamString = document.getElementById('selectHome').selectedOptions[0].value;
+	var awayTeamString = document.getElementById('selectAway').selectedOptions[0].value;
+	if (awayteams.includes(awayTeamString) && hometeams.includes(homeTeamString)) {
+		var filename = document.getElementById('selectHome').selectedOptions[0].text + "_" 
+					   + document.getElementById('selectAway').selectedOptions[0].text;
+		//if date is in middle, move to the end
+ 		filename = filename.replace(/(.*) (\(\d+\/\d+\/\d+\))(.*)/g, "$1$3_$2").replace(/[()]/g,"");
+ 		document.getElementById('filename').value = filenames[filename];
+		return true;
+	}
+	
+	if (!hometeams.includes(homeTeamString)) {
+		var homeTeamString = document.getElementById('selectHome')
+		document.getElementById('selectHome').style.boxShadow =  "0 0 0 rgba(255,255,255, 0.8)";
+		document.getElementById('selectHome').style.animation =  "pulse 1.5s infinite";	
+	}
+	
+	if (!awayteams.includes(awayTeamString)) {
+		var homeTeamString = document.getElementById('selectAway')
+		document.getElementById('selectAway').style.boxShadow =  "0 0 0 rgba(255,255,255, 0.8)";
+		document.getElementById('selectAway').style.animation =  "pulse 1.5s infinite";	
+	}	
+	return false;
+}
+
+</script>
+
+</body>
+</html>
