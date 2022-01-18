@@ -34,6 +34,7 @@ class IndexPage(Resource):
 		filenames = dict()
 		#check all available games
 		for jsonFileName in glob.glob('JSONGameData/*.json'):
+			jsonFileName = jsonFileName.replace("\\","/");
 			#skip file without a date 1900-202* in the filename
 			if not re.match(".*(19\d\d|2[01][012]\d).*",jsonFileName):
 				continue
