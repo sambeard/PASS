@@ -1,8 +1,9 @@
 __pycache__
 *.pyc
-JSONGameData/*20*.json
+JSONGameData/*
 JSONGameData/Eredivisie
-JSONPlayerData/*.json
+JSONPlayerData/*
+SavedReports/
 !/JSONPlayerData/player_1011578.json
 !/JSONPlayerData/player_1028621.json
 !/JSONPlayerData/player_1064273.json
