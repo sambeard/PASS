@@ -3,6 +3,7 @@ __pycache__
 JSONGameData/*
 JSONGameData/Eredivisie
 JSONPlayerData/*
+SavedReports/
 !/JSONPlayerData/player_1011578.json
 !/JSONPlayerData/player_1028621.json
 !/JSONPlayerData/player_1064273.json
