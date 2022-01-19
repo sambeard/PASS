@@ -960,20 +960,21 @@ def fastassistaftersubstitution(gamecourselist, homeaway, idx):
 
 # Check if the new substitute has made a direct contribution to the score (goal or assist)
 def positivesubstitutionfocusteam(gamecourselist, homeawawy, idx):
-    pass
+    raise NotImplementedError()
 
 # Check if the new substitute has made a direct contribution to the score (goal or assist)
 def positivesubstitutionotherteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
 
 def negativesubstitutionfocusteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
 
 def negativesubstitutionotherteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
+# ========== END SUBSTITUTION
 
 
 def latelossfocusteam(homeaway, gamecourselist, idx):
