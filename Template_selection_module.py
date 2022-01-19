@@ -1210,10 +1210,10 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
             temptemplatelist.append([template, 0.1])
         if event['event'] == 'substitution':
             # Add template
-            _template = substitutionTemplateIndexGenerator(gamecourselist, homeaway, idx)
+            _templateIndex = substitutionTemplateIndexGenerator(gamecourselist, homeaway, idx)
             try:
                 categorytemplates = templates[
-                    legend.index(_template)]
+                    legend.index(_templateIndex)]
             except ValueError:
                 categorytemplates = []
             try:
