@@ -1259,6 +1259,7 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
         del gamecourselist[idx + 1]
         #And modify the template and legend
 
+    # =========== START MARK FOR CLEAN UP ==============
     # Modify the gamecourselist if the template for a triple substitution is chosen
     try:
         tstemplate = templates[legend.index("Game course, substitution focus team (triple)")]
@@ -1477,6 +1478,7 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
         #And modify the template and legend
 
 
+    # =========== END MARK FOR CLEAN UP ==============
     return gamecourselist, template
 
 
