@@ -533,7 +533,7 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
     templates = InfoVariety(homeaway, templates, previoustemplates)
     temptemplatelist = []
 
-    # Check if the current team is the focus team or not
+    # Check if current team is the focus team
     if event['team'] == homeaway:
         if event['event'] == 'regular goal':
             if Ruleset.winninggoalwithassist(soup, gamecourselist, idx) == True:
@@ -872,6 +872,7 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
             #     except IndexError:
             #         ''
 
+    # Current team is the other team
     else:
         #Get the regular goal rules
         if event['event'] == 'regular goal':
