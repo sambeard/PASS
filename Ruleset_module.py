@@ -1319,76 +1319,21 @@ def winner(gamecourselist, homeaway):
     else:
         return False
 
-def focusteamwinning(gamecourselist, homeaway, idx):
-    focusgoals = 0
-    othergoals = 0
+def otherTeam(focusTeam):
+    return "away" if focusTeam == "home" else "home"
+
+def isTeamWinning(gameCourseList, focusTeam, idx):
+    other = otherTeam(focusTeam)
+    goals = {focusTeam:0, other:0 }
     # Get the goals for the focus team and other team so far
-    beforeevents = gamecourselist[:idx]
-    # Count all goals that happened so far
-    for eventidx, event in enumerate(beforeevents):
-        if ((event['event'] == 'regular goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] != homeaway)):
-            if 'player' in event:
-                focusgoals += 1
-            else:
-                focusgoals += 2
-        if ((event['event'] == 'regular goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] == homeaway)):
-            if 'player' in event:
-                othergoals += 1
-            else:
-                othergoals += 2
-    # If the focus team scored more goals, they are winning
-    if (focusgoals > othergoals):
-        return True
-    else:
-        return False
+    previousEvents = gameCourseList[:idx]
+    for eventidx, event in enumerate(previousEvents):
+        if (event['event'] == 'regular goal' or event['event'] == 'penalty goal' or event['event'] == 'own goal'):
+            goals[focusTeam] += 1 if 'player' in event else 2
+    return goals[focusTeam] > goals[other]
 
-def focusteamlosing(gamecourselist, homeaway, idx):
-    # If the focus team is neither winning nor tieing, they are losing
-    if (focusteamwinning(gamecourselist, homeaway, idx)):
-        return False
-    elif(tieing(gamecourselist, homeaway, idx)):
-        return False
-    return True
-
-def otherteamwinning(gamecourselist, homeaway, idx):
-    # If the focus team is losing, then the other team is winning
-    return focusteamlosing(gamecourselist, homeaway, idx)
-
-def otherteamlosing(gamecourselist, homeaway, idx):
-    # If the focus team is winning, then the other team is losing
-    return focusteamlosing(gamecourselist, homeaway, idx)
-
-def tieing(gamecourselist, homeaway, idx):
-    focusgoals = 0
-    othergoals = 0
-    # Get the goals for the focus team and other team so far
-    beforeevents = gamecourselist[:idx]
-    # Count all goals that happened so far
-    for eventidx, event in enumerate(beforeevents):
-        if ((event['event'] == 'regular goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] != homeaway)):
-            if 'player' in event:
-                focusgoals += 1
-            else:
-                focusgoals += 2
-        if ((event['event'] == 'regular goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] == homeaway)):
-            if 'player' in event:
-                othergoals += 1
-            else:
-                othergoals += 2
-    # If the focus team scored as many goals as the away team, they are tieing
-    if (focusgoals == othergoals):
-        return True
-    else:
-        return False
-
+def isTeamTieing(gameCourseList, focusTeam, idx):
+    return not isTeamWinning(focusTeam) and not isTeamWinning(otherTeam(focusTeam))
 
 def freekickgoal(jsongamedata, gamecourselist, idx):
     # The event should of course be a goal
