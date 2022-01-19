@@ -1216,12 +1216,14 @@ def GameCourseTemplateSelection(event, legend, templates, gamecourselist, soup, 
                     legend.index(_templateIndex)]
             except ValueError:
                 categorytemplates = []
-            try:
+            except IndexError:
+                categorytemplates = templates[legend.index("Game course, substitution other team (all purpose)")]
+            
+            if(len(categorytemplates)):
                 template = random.choice(categorytemplates)
                 temptemplatelist.append([template, 0.5])
-            except IndexError:
-                ''
-            if not temptemplatelist:
+            # if specific template is not present, fall back to default
+            else:
                 temptemplatelist.append(["".strip(), 1])
 
     elems = [i[0] for i in temptemplatelist]
