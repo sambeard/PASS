@@ -3,10 +3,10 @@ import random
 import numpy
 from Info_variety_module import InfoVariety
 
-def substitutionTemplateIndexGenerator(gamecourselist, focusteam, idx):
+def substitutionTemplateIndexGenerator(gameCourseList, focusTeam, idx):
     gamePosition = ""
     _type = ""
-    (amount, forFocusTeam, isConsecutive) = Ruleset.substitution(gamecourselist, focusteam, idx)
+    (amount, forFocusTeam, isConsecutive) = Ruleset.substitution(gameCourseList, focusTeam, idx)
 
     # Evaluate current game position
     if(Ruleset.isTeamTieing(gameCourseList, focusTeam,idx)):
@@ -30,7 +30,7 @@ def substitutionTemplateIndexGenerator(gamecourselist, focusteam, idx):
     
     # Add focus team attribute
     team = "focus team " if (forFocusTeam) else ""
-    return "Game course, substitution {team}({type}{gpos}})".format(team = team,type = _type, gpos = gamePosition)
+    return "Game course, substitution {team}({type}{gpos})".format(team = team,type = _type, gpos = gamePosition)
 
 def GeneralTemplateSelection(type, possiblelegend, possibletemplates, gamecourselist, gamestatisticslist, soup, homeaway):
     possibletemplates = InfoVariety(homeaway, possibletemplates)
