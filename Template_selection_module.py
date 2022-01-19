@@ -9,9 +9,9 @@ def substitutionTemplateIndexGenerator(gamecourselist, focusteam, idx):
     (amount, forFocusTeam, isConsecutive) = Ruleset.substitution(gamecourselist, focusteam, idx)
 
     # Evaluate current game position
-    if(Ruleset.isTeamTieing(focusteam)):
+    if(Ruleset.isTeamTieing(gameCourseList, focusTeam,idx)):
         gamePosition = "tieing"
-    elif(Ruleset.isTeamWinning(focusteam)):
+    elif(Ruleset.isTeamWinning(gameCourseList,focusTeam,idx)):
         gamePosition = "winning"
     else:
         gamePosition = "losing"

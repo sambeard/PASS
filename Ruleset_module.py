@@ -1333,7 +1333,7 @@ def isTeamWinning(gameCourseList, focusTeam, idx):
     return goals[focusTeam] > goals[other]
 
 def isTeamTieing(gameCourseList, focusTeam, idx):
-    return not isTeamWinning(focusTeam) and not isTeamWinning(otherTeam(focusTeam))
+    return not isTeamWinning(gameCourseList, focusTeam, idx) and not isTeamWinning(gameCourseList, otherTeam(focusTeam), idx)
 
 def freekickgoal(jsongamedata, gamecourselist, idx):
     # The event should of course be a goal
