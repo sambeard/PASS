@@ -815,206 +815,34 @@ def lateequalizerotherteam(homeaway, gamecourselist, idx):
     else:
         return False
 
+# ===== START SUBSTITUTIONS ============= 
 
-def doubleneutralsubstitutionfocusteam(gamecourselist, homeaway , idx):
-    # If the next event is also a substitution, then it might be a double substitution
-    # If the event is the last event of the game, it can never be double
-    if (idx < len(gamecourselist) - 1) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx+1]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != focus or sub2['team'] != focus:
-            return False
-        else:
-            if sub['minute'] == sub2['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
+def substitution(gamecourselist, focusteam , idx):
+    if(gamecourselist[idx]['event'] != 'substitution'):
+        raise Exception("Wrong event for this rule")
 
-def doubleneutralsubstitutionotherteam(gamecourselist, homeaway, idx):
-    # If the next event is also a substitution, then it might be a double substitution
-    # If the event is the last event of the game, it can never be double
-    if (idx < len(gamecourselist) - 1) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx+1]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx +1]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != other or sub2['team'] != other:
-            return False
-        else:
-            if sub['minute'] == sub2['minute']:
-                return True
+    current_event = gamecourselist[idx]
+    current_team = current_event['team']
+    consecutive = False
+    #  start with next event
+    i = 1
+    while(i < 3):
+        # check if there is a next event
+        if (idx + i >= len(gamecourselist)):
+            break
+        next_event = gamecourselist[idx+i]
+        # check whether it's a substitution and for the same team
+        if(next_event['event'] != 'substitution' or next_event['team'] != current_team):
+            break
+        # break if they were consecutive but not any more
+        if((next_event['minute'] == current_event['minute']) != consecutive):
+            # make exception if they become consecutive
+            if(not consecutive):
+                consecutive = True
             else:
-                return False
-    else:
-        return False
-
-def tripleneutralsubstitutionfocusteam(gamecourselist, homeaway , idx):
-    # If the next 2 events are also a substitution, then it might be a triple substitution
-    # If the event is the last or second last event of the game, it can never be triple
-    if (idx < len(gamecourselist) - 2) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx+1]['event'] == 'substitution' and gamecourselist[idx+2]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        sub3 = gamecourselist[idx + 2]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != focus or sub2['team'] != focus or sub3['team'] != focus:
-            return False
-        else:
-            if sub['minute'] == sub2['minute'] == sub3['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def tripleneutralsubstitutionotherteam(gamecourselist, homeaway , idx):
-    # If the next 2 events are also a substitution, then it might be a triple substitution
-    # If the event is the last or second last event of the game, it can never be triple
-    if (idx < len(gamecourselist) - 2) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx+1]['event'] == 'substitution' and gamecourselist[idx+2]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        sub3 = gamecourselist[idx + 2]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != other or sub2['team'] != other or sub3['team'] != other:
-            return False
-        else:
-            if sub['minute'] == sub2['minute'] == sub3['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def twoconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
-    # If the next event is also a substitution, then is a consecutive substitution
-    # If the event is the last event of the game, it can never be double
-    if (idx < len(gamecourselist) - 1) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx + 1][
-        'event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != focus or sub2['team'] != focus:
-            return False
-        else:
-            if sub['minute'] != sub2['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def twoconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
-    # If the next event is also a substitution, then is a consecutive substitution
-    # If the event is the last event of the game, it can never be double
-    if (idx < len(gamecourselist) - 1) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx + 1][
-        'event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != other or sub2['team'] != other:
-            return False
-        else:
-            if sub['minute'] != sub2['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def threeconsecutivesubstitutionsfocusteam(gamecourselist, homeaway, idx):
-    # If the next 2 events are also a substitution, then it might be a three consecutive substitution
-    # If the event is the last or second last event of the game, it can never be three
-    if (idx < len(gamecourselist) - 2) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx + 1][
-        'event'] == 'substitution' and gamecourselist[idx + 2]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        sub3 = gamecourselist[idx + 2]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != focus or sub2['team'] != focus or sub3['team'] != focus:
-            return False
-        else:
-            if sub['minute'] != sub2['minute'] != sub3['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def threeconsecutivesubstitutionsotherteam(gamecourselist, homeaway, idx):
-    # If the next 2 events are also a substitution, then it might be a three consecutive substitution
-    # If the event is the last or second last event of the game, it can never be three
-    if (idx < len(gamecourselist) - 2) and gamecourselist[idx]['event'] == 'substitution' and gamecourselist[idx + 1][
-        'event'] == 'substitution' and gamecourselist[idx + 2]['event'] == 'substitution':
-        sub = gamecourselist[idx]
-        sub2 = gamecourselist[idx + 1]
-        sub3 = gamecourselist[idx + 2]
-        # Assign who is the focus team and who the other
-        if homeaway == 'home':
-            focus = homeaway
-            other = 'away'
-        else:
-            focus = homeaway
-            other = 'home'
-        # Check if the substitutions were for the focus team
-        if sub['team'] != other or sub2['team'] != other or sub3['team'] != other:
-            return False
-        else:
-            if sub['minute'] != sub2['minute'] != sub3['minute']:
-                return True
-            else:
-                return False
-    else:
-        return False
+                break
+        i+=1
+    return (i,current_team==focusteam, consecutive)
 
 # Check if the goal was scored by someone just subbed on
 def fastgoalaftersubstitution(gamecourselist, homeaway, idx):
@@ -1132,20 +960,21 @@ def fastassistaftersubstitution(gamecourselist, homeaway, idx):
 
 # Check if the new substitute has made a direct contribution to the score (goal or assist)
 def positivesubstitutionfocusteam(gamecourselist, homeawawy, idx):
-    pass
+    raise NotImplementedError()
 
 # Check if the new substitute has made a direct contribution to the score (goal or assist)
 def positivesubstitutionotherteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
 
 def negativesubstitutionfocusteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
 
 def negativesubstitutionotherteam(gamecourselist, homeaway, idx):
-    pass
+    raise NotImplementedError()
 
+# ========== END SUBSTITUTION
 
 
 def latelossfocusteam(homeaway, gamecourselist, idx):
@@ -1490,76 +1319,21 @@ def winner(gamecourselist, homeaway):
     else:
         return False
 
-def focusteamwinning(gamecourselist, homeaway, idx):
-    focusgoals = 0
-    othergoals = 0
+def otherTeam(focusTeam):
+    return "away" if focusTeam == "home" else "home"
+
+def isTeamWinning(gameCourseList, focusTeam, idx):
+    other = otherTeam(focusTeam)
+    goals = {focusTeam:0, other:0 }
     # Get the goals for the focus team and other team so far
-    beforeevents = gamecourselist[:idx]
-    # Count all goals that happened so far
-    for eventidx, event in enumerate(beforeevents):
-        if ((event['event'] == 'regular goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] != homeaway)):
-            if 'player' in event:
-                focusgoals += 1
-            else:
-                focusgoals += 2
-        if ((event['event'] == 'regular goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] == homeaway)):
-            if 'player' in event:
-                othergoals += 1
-            else:
-                othergoals += 2
-    # If the focus team scored more goals, they are winning
-    if (focusgoals > othergoals):
-        return True
-    else:
-        return False
+    previousEvents = gameCourseList[:idx]
+    for eventidx, event in enumerate(previousEvents):
+        if (event['event'] == 'regular goal' or event['event'] == 'penalty goal' or event['event'] == 'own goal'):
+            goals[focusTeam] += 1 if 'player' in event else 2
+    return goals[focusTeam] > goals[other]
 
-def focusteamlosing(gamecourselist, homeaway, idx):
-    # If the focus team is neither winning nor tieing, they are losing
-    if (focusteamwinning(gamecourselist, homeaway, idx)):
-        return False
-    elif(tieing(gamecourselist, homeaway, idx)):
-        return False
-    return True
-
-def otherteamwinning(gamecourselist, homeaway, idx):
-    # If the focus team is losing, then the other team is winning
-    return focusteamlosing(gamecourselist, homeaway, idx)
-
-def otherteamlosing(gamecourselist, homeaway, idx):
-    # If the focus team is winning, then the other team is losing
-    return focusteamlosing(gamecourselist, homeaway, idx)
-
-def tieing(gamecourselist, homeaway, idx):
-    focusgoals = 0
-    othergoals = 0
-    # Get the goals for the focus team and other team so far
-    beforeevents = gamecourselist[:idx]
-    # Count all goals that happened so far
-    for eventidx, event in enumerate(beforeevents):
-        if ((event['event'] == 'regular goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] == homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] != homeaway)):
-            if 'player' in event:
-                focusgoals += 1
-            else:
-                focusgoals += 2
-        if ((event['event'] == 'regular goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'penalty goal') and (event['team'] != homeaway)) or (
-                (event['event'] == 'own goal') and (event['team'] == homeaway)):
-            if 'player' in event:
-                othergoals += 1
-            else:
-                othergoals += 2
-    # If the focus team scored as many goals as the away team, they are tieing
-    if (focusgoals == othergoals):
-        return True
-    else:
-        return False
-
+def isTeamTieing(gameCourseList, focusTeam, idx):
+    return not isTeamWinning(gameCourseList, focusTeam, idx) and not isTeamWinning(gameCourseList, otherTeam(focusTeam), idx)
 
 def freekickgoal(jsongamedata, gamecourselist, idx):
     # The event should of course be a goal
