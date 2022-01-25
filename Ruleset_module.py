@@ -1307,11 +1307,13 @@ def winner(gamecourselist, homeaway):
         if ((event['event'] == 'regular goal') and (event['team'] == homeaway)) or ((event['event'] == 'penalty goal') and (event['team'] == homeaway)) or ((event['event'] == 'own goal') and (event['team'] != homeaway)):
             if 'player' in event:
                 focusgoals += 1
+            # due to successive goals being merged
             else:
                 focusgoals += 2
         if ((event['event'] == 'regular goal') and (event['team'] != homeaway)) or ((event['event'] == 'penalty goal') and (event['team'] != homeaway)) or ((event['event'] == 'own goal') and (event['team'] == homeaway)):
             if 'player' in event:
                 othergoals += 1
+            # due to successive goals being merged
             else:
                 othergoals += 2
     if (focusgoals > othergoals) or (othergoals > focusgoals):
