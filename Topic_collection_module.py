@@ -13,10 +13,12 @@ def EventConnect(assists, regulargoals, missedpenalties, penaltygoals, redcards,
         eventdict['minute_asFloat'] = float(minute.replace('+',"."))
         #TODO: change this to PersonID
         eventdict['player'] = event['c_Person']
-        homeaway = 'home'
-        if event['n_HomeOrAway']==-1:
-            homeaway = 'away'
-        eventdict['team'] = homeaway
+
+        # correct for own goals
+        isHome = event['n_HomeOrAway'] == 1 
+        ownGoal = event['c_Action'] == 'Eigen doelpunt'
+        # xor operator flips isHome if ownGoal is true
+        eventdict['team'] = "home" if isHome ^ ownGoal else "away"
         return eventdict
     
     #sometimes event happen in overtime and the "minute" will be 45+1

@@ -1329,7 +1329,12 @@ def isTeamWinning(gameCourseList, focusTeam, idx):
     previousEvents = gameCourseList[:idx]
     for eventidx, event in enumerate(previousEvents):
         if (event['event'] == 'regular goal' or event['event'] == 'penalty goal' or event['event'] == 'own goal'):
-            goals[focusTeam] += 1 if 'player' in event else 2
+            team = event['team']
+            # add score to other team if own goal
+            if(event['event'] == 'own goal'):
+                team = otherTeam(team)
+            # add two because of merging of events
+            goals[team] += 1 if 'player' in event else 2
     return goals[focusTeam] > goals[other]
 
 def isTeamTieing(gameCourseList, focusTeam, idx):
