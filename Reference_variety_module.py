@@ -460,10 +460,8 @@ def ReviewReferences(sentences, jsongamedata, homeaway, **kwargs):
 
 				# Use either full name or last name
 				player_last_name = playerinfo['c_PersonLastName']
-				name_options = []
-				name_options.append(player)
-				name_options.append(player_last_name)
-				name_option = numpy.random.choice(name_options)
+				(elems, norm) = PlayerDefiniteDescription(playerinfo)
+				name_option = numpy.random.choice(elems, p=norm)
 
 				# Replace the placeholder with the full or last name
 				# Check if placeholder is found
