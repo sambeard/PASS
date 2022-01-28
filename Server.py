@@ -104,7 +104,7 @@ class Generation(Resource):
 		for line in awayreport:
 			awayreporthtml = awayreporthtml + "<p>"+line+"</p>"+"\n"		
 		responsePage = responsePage.replace('#HOMEREPORT#',homereporthtml,1).replace('#AWAYREPORT#',awayreporthtml,1)
-		responsePage = responsePage.replace('#XMLREPORTFILE#',self.filename.replace('./InfoXMLs/',""))
+		responsePage = responsePage.replace('#JSONREPORTFILE#',self.filename)
 		request.write(responsePage.encode('utf-8'))
 		request.finish()
 				
@@ -159,8 +159,8 @@ root.putChild(b"",indexPage)
 generation = Generation()
 root.putChild(b"generate", generation)
 
-xml = File('./InfoXMLs')
-root.putChild(b"XML", xml)
+jsonGameData = File('./JsonGameData')
+root.putChild(b"JSONGameData", jsonGameData)
 
 
 factory = Site(root)
