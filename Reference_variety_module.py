@@ -759,7 +759,7 @@ def PlayerDefiniteDescription(playerinfo):
 	#these references all contain the proper name
 	namepossibilities = []
 	fullname = playerinfo['c_Person']
-	namepossibilities.append([fullname, 10])
+	namepossibilities.append([fullname, 3])
 	firstname = playerinfo['c_PersonFirstName']
 	lastname = playerinfo['c_PersonLastName']
 	namepossibilities.append([lastname, 10])
