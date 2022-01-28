@@ -104,7 +104,7 @@ class Generation(Resource):
 		for line in awayreport:
 			awayreporthtml = awayreporthtml + "<p>"+line+"</p>"+"\n"		
 		responsePage = responsePage.replace('#HOMEREPORT#',homereporthtml,1).replace('#AWAYREPORT#',awayreporthtml,1)
-		responsePage = responsePage.replace('#XMLREPORTFILE#',self.filename.replace('./InfoXMLs/',""))
+		responsePage = responsePage.replace('#JSONREPORTFILE#',self.filename)
 		request.write(responsePage.encode('utf-8'))
 		request.finish()
 				
@@ -138,7 +138,7 @@ class Generation(Resource):
 		with open('HTML/results-start.html', 'r') as htmlfile:
 			responsePage=htmlfile.read()
 		
-		responsePage = responsePage.replace('#FORMVALUE1#',arg1).replace('#FORMVALUE2#',arg2)				
+		responsePage = responsePage.replace('#FORMVALUE1#',arg1).replace('#FORMVALUE2#',arg2).replace('#FORMVALUE3#',filename)				
 		responsePage = responsePage.replace('#LEAGUE#',league,1).replace('#DATETIME#',date)
 		responsePage = responsePage.replace('#TEAMHOMEENCODED#',home_team).replace('#TEAMAWAYENCODED#',away_team)
 		responsePage = responsePage.replace('#TEAMHOME#',home_team).replace('#TEAMAWAY#',away_team)
@@ -159,8 +159,8 @@ root.putChild(b"",indexPage)
 generation = Generation()
 root.putChild(b"generate", generation)
 
-xml = File('./InfoXMLs')
-root.putChild(b"XML", xml)
+jsonGameData = File('./JsonGameData')
+root.putChild(b"JSONGameData", jsonGameData)
 
 
 factory = Site(root)
